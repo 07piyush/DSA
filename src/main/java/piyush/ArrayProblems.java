@@ -88,4 +88,40 @@ public class ArrayProblems {
         }
         return elem;
     }
+    
+    public static int maximumSubArraySum(int[] nums) {
+    	
+    	/*
+    	 * Given an integer array nums, find the subarray with the largest sum, and return its sum.
+    	 * 
+    	 * Input: nums = [-2,1,-3,4,-1,2,1,-5,4] 
+    	 * Output: 6
+    	 * Explanation: The subarray [4,-1,2,1] has the largest sum 6.
+    	 * 
+    	 * Brute Force : try all sub array combinations, maintain maximum sum. : 
+    	 * Time = O(n3) 
+    	 * 
+    	 * Optimal 1 : Kadane's algorithm : starting with maximumSum = minimum possible value. 
+    	 * traverse the array, for each item maintain a currentSum, if currentSum is greater than maximumSum
+    	 * then choose currentSum as maximumSum. while we are maintaining currentSum by adding array elements.
+    	 * we will reset currentSum to zero and start over the hunt of finding maximum sum when currentSum goes less than 0,
+    	 * while also maintaining maximumSum. 
+    	 * 
+    	 * Optimal 2: Divide and conquer. 
+    	 * */
+
+        int maximumSum = Integer.MIN_VALUE;
+        int currentSum = 0;
+        for(int index = 0; index < nums.length; index++){
+            currentSum = currentSum + nums[index];
+            if(currentSum > maximumSum)
+                {
+                    maximumSum = currentSum;
+                }
+            if(currentSum < 0){
+                currentSum = 0;
+            }
+        }
+        return maximumSum;
+    }
 }
