@@ -162,4 +162,39 @@ public class ArrayProblems {
          }
      return maxProfit;
     }
+    
+    public static int[] rearrangeArray(int[] nums) {
+    	/*
+    	 * 2149. Rearrange Array Elements by Sign
+    	 * 1. order of elements must retain the order they are in actual array.
+    	 * 2. rearranged array must start with positive value.
+    	 * 3. there will be same number of positive and negative integers.
+    	 * 
+    	 * Brute force : create two lists, P and N to store all positive and negative elements respectively.
+    	 * iterate on nums, push element in repective helper lists.
+    	 * again iterate on helper lists to store back items in required order.
+    	 * Time = O(n) + O(n) | Space = O(n)
+    	 * 
+    	 * Better : we dont need to do modifications inplace. hence recreate a result array, while iterating on 
+    	 * nums. this will reduce an iteration on nums, compared to brute force.
+    	 * 
+    	 * Time = O(n) | Space = O(n)
+    	 * */
+    	
+        int[] result = new int[nums.length];
+        int pos = 0;
+        int neg = 1;
+        for(int index = 0; index<nums.length; index++){
+            if(nums[index] > 0){
+                result[pos] = nums[index];
+                pos+=2;
+            }
+            else{
+                result[neg] = nums[index];
+                neg+=2;
+            }
+        }
+        return result;
+    }
+    
 }
