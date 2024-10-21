@@ -1,5 +1,7 @@
 package piyush;
 
+import java.util.HashSet;
+
 public class ArrayProblems {
 
 	public static void sortColors(int[] nums) {
@@ -256,5 +258,51 @@ public class ArrayProblems {
              left++;
              right--;
          }
+    }
+    
+    public static int longestConsecutive(int[] nums) {
+    	/*
+    	 * Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence.
+    	 * 
+    	 * Input: nums = [100,4,200,1,3,2]
+    	 * Output: 4 
+    	 * Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+    	 * 
+    	 * Brute Force : For every element in nums, traverse whole array and keep a count of streak that
+    	 * makes. while maintaining max streak. return max streak at the end.
+    	 * Time = O(n2)
+    	 * Space = O(1)
+    	 * 
+    	 * Efficient approach : keep a set of unique elements of array, while iterating on set, check if 
+    	 * previous element of current element exist in set, do not start a streak if yes.
+    	 * if previous does not exists, then start a streak and count while maintaining maxStreak.
+    	 * 
+    	 * Time = O(n) : to put all in set. + O(n) : to iterate on each in set. + O(n) to find streak. = O(3n)
+    	 * Space = O(n)
+    	 * 
+    	 * */
+    	
+        if(nums.length == 0)
+            return 0;
+        HashSet<Integer> collection = new HashSet<Integer>();
+        int maxStreak = 1;
+        for(int index = 0; index < nums.length; index++){
+            collection.add(nums[index]);
+        }
+        for(Integer item : collection) {
+        	if(!collection.contains(item-1))
+        	{
+        		int streak = 1;
+        		Integer target = item + 1;
+        		while(collection.contains(target)) {
+        			streak++;
+        			target++;
+        		}
+        		if(streak > maxStreak) {
+        			maxStreak = streak;
+        		}
+        	}
+        }
+        return maxStreak;
     }
 }
