@@ -124,4 +124,42 @@ public class ArrayProblems {
         }
         return maximumSum;
     }
+    
+    public static int buyAndSellStock(int[] prices) {
+    	
+    	/*
+    	 * You are given an array prices where prices[i] is the price of a given stock on the ith day.
+    	 * You want to maximize your profit by choosing a single day to buy one stock and choosing a different day 
+    	 * in the future to sell that stock. Return the maximum profit you can achieve from this transaction. 
+    	 * If you cannot achieve any profit, return 0.
+    	 * 
+    	 * Input: prices = [7,1,5,3,6,4]
+    	 * Output: 5
+    	 * 
+    	 * Brute Force : try every permutations of buying price and selling price, while maintaining 
+    	 * max profit. Time = O(n2)
+    	 * 
+    	 * Optimal : We need to find the minimum possible buying price from left.
+    	 * starting with first element, we can only sell at second value of prices.
+    	 * any following element in prices 1. will give either better buying price or
+    	 * 2. better profit.
+    	 * 
+    	 * hence iterate, if element is lesser than minimumBuy yet, choose for buying.
+    	 * while if element is giving better profit, choose as maxProfit.
+    	 * 
+    	 * */
+    	
+    	 int maxProfit = 0;
+         int minimumBuy = prices[0];
+         for(int sellAt = 1; sellAt < prices.length; sellAt++){
+             int currentProfit = prices[sellAt] - minimumBuy;
+             if(currentProfit > maxProfit){
+                 maxProfit = currentProfit;
+             }
+             if(prices[sellAt] < minimumBuy){
+                 minimumBuy = prices[sellAt];
+             }
+         }
+     return maxProfit;
+    }
 }
