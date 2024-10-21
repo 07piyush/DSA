@@ -197,4 +197,64 @@ public class ArrayProblems {
         return result;
     }
     
+    public static void nextPermutation(int[] nums) {
+    	
+    	/*
+    	 * 31. Next Permutation.
+    	 * For example, for arr = [1,2,3], the following are all the permutations of arr: 
+    	 * [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
+    	 * 
+    	 * for a given array, give its next lexicographical arrangement. return first arrangement
+    	 * if there is no next arrangement possible.
+    	 * 
+    	 * Brute force : try all lexicoraphical arrangements, sort them in order and then iterate on 
+    	 * sorted list to find the required array.
+    	 * An array with n elements can be arranged in n factorial ways. n! = (n*(n-1)*...2*1) = 6
+    	 * finding our next permute will require to iterate on all permutations.
+    	 * 
+    	 * Time = O(n!*n) | Space = O(n!)
+    	 * 
+    	 * Optimized : for lexicographically correct arrangement, i.e last arrangement there will be 
+    	 * strictly increasing trend from backwards. E.g [5,4,3,2,1] it can not be further arranged.
+    	 * 
+    	 * 
+    	 * if there is a violation at any place, then that will be the place where next greater value must come.
+    	 * 
+    	 * */
+    	
+        int bp = -1;
+        //find the violation in array.
+        for(int index = nums.length-2; index >=0; index--){
+            if(nums[index] < nums[index+1]){
+                bp = index;
+                break;
+            }
+        }
+        if(bp == -1){
+        	//no violation found, that means there is no next permutation exist.
+            int left = bp+1;
+            int right = nums.length-1;
+            reverseArray(nums, left, right);
+            return;
+        }
+        //swap with immdediate largest in right part.
+        for(int index = nums.length-1; index > bp; index--){
+            if(bp > -1 && nums[index] > nums[bp]){
+                swap(nums, index, bp);
+                break;
+            }
+        }
+        //reverse nums after bp.
+        int left = bp+1;
+        int right = nums.length-1;
+       reverseArray(nums, left, right);
+    }
+    
+    public static void reverseArray(int[] nums, int left, int right) {
+    	 while(left < right){
+             swap(nums, left, right);
+             left++;
+             right--;
+         }
+    }
 }
