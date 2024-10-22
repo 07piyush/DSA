@@ -305,4 +305,47 @@ public class ArrayProblems {
         }
         return maxStreak;
     }
+    
+    public static void setZeroes(int[][] matrix) {
+    	
+    	/*
+    	 * Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's
+    	 * 
+    	 * Brute force : for each item in matrix, if value is 0, then iterate on whole row and column,
+    	 * to mark elements of that row/column as -1.
+    	 * In this way no modified item will cause any inconsistency to non zeros entries.
+    	 * Again iterate on whole matrix to mark -1 items as 0.
+    	 * 
+    	 * Time = O(m*n) * O(m+n) ~ O(n3)
+    	 * Space = O(m+n)
+    	 * 
+    	 * Better : keep flag arrays, to note those rows and columns which shall become 0.
+    	 * populate flag arrays while iterating on matrix, such that if any 0 is encountered, flag arrays have 
+    	 * yes/no to update matrix in the end.
+    	 * 
+    	 * Time = O(m*n) + O(m*n)
+    	 * Space = O(m+n)
+    	 * */
+    	
+    	 int rows = matrix.length;
+         int columns= matrix[0].length;
+         int[] rowStatus = new int[rows];
+         int[] colStatus = new int[columns];
+
+         for(int row = 0; row < rows; row++){
+             for(int col = 0; col < columns; col++){
+                 if(matrix[row][col] == 0){
+                     rowStatus[row] = 1;
+                     colStatus[col] = 1;
+                 }
+             }
+         }
+          for(int row = 0; row < rows; row++){
+             for(int col = 0; col < columns; col++){
+                 if(rowStatus[row] == 1 || colStatus[col] == 1){
+                     matrix[row][col] = 0;
+                 }
+             }
+         }
+    }
 }
