@@ -189,4 +189,89 @@ public class LinkedListProblems {
         return head;
     }
 	
+	public static ListNode sortList(ListNode head) {
+		
+		/*
+		 * Sort a singly linkedlist. 
+		 * Used Merge sort technique. [divide and merge]
+		 * 1. divide list into two.
+		 * 2. sort left, sort right.
+		 * 3. merge left list and right list.
+		 * 4. return new head.
+		 * 
+		 * Time = O(nlong)
+		 * Space = O(1)
+		 * 
+		 * */
+		
+        if(head == null || head.next == null)
+            return head;
+        ListNode midPrev = getPrevOfMid(head);
+        ListNode mid = midPrev.next;
+        midPrev.next = null;
+        ListNode sortedA = sortList(head);
+        ListNode sortedB = sortList(mid);
+        head = mergeSortedLists(sortedA, sortedB);
+        return head;
+    }
+	
+    public static ListNode mergeSortedLists(ListNode headA, ListNode headB){
+        if(headA==null)
+            return headB;
+        else if(headB==null)
+            return headA;
+
+        ListNode resultH = null;
+        ListNode resultCurr = null;
+        ListNode curA = headA;
+        ListNode curB = headB;
+        while(curA!=null && curB!=null){
+            if(curA.val < curB.val){
+                if(resultH==null){
+                    resultH = curA;
+                    resultCurr = resultH;
+                }
+                else{
+                    resultCurr.next = curA;
+                    resultCurr = resultCurr.next;
+                }
+                curA = curA.next;
+            }
+            else{
+                if(resultH==null){
+                    resultH = curB;
+                    resultCurr = resultH;
+                }
+                else{
+                    resultCurr.next = curB;
+                    resultCurr = resultCurr.next;
+                }
+                curB = curB.next;
+            }
+        }
+        while(curA!=null){
+            resultCurr.next = curA;
+            resultCurr = resultCurr.next;
+            curA=curA.next;
+        }
+        while(curB!=null){
+            resultCurr.next = curB;
+            resultCurr = resultCurr.next;
+            curB=curB.next;
+        }
+        return resultH;
+    }
+
+    private static ListNode getPrevOfMid(ListNode head){
+        if(head == null || head.next == null)
+            return head;
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while(fast.next!=null && fast.next.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+	
 }
