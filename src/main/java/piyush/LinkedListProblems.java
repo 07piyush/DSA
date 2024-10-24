@@ -280,6 +280,7 @@ public class LinkedListProblems {
     	 * Given the heads of two singly linked-lists headA and headB, 
     	 * return the node at which the two lists intersect. If the two linked lists have no intersection at all, 
     	 * return null.
+    	 * 
     	 * */
     	
     	
@@ -306,4 +307,56 @@ public class LinkedListProblems {
         return null;
     }
 	
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    	
+    	/*
+    	 * given two non-empty linked lists representing two non-negative integers. 
+    	 * The digits are stored in reverse order, and each of their nodes contains a single digit.
+    	 * Add the two numbers and return the sum as a linked list.
+    	 * 
+    	 * E.g. 
+    	 * Input: l1 = [2,4,3], l2 = [5,6,4]
+    	 * Output: [7,0,8]
+    	 * Explanation: 342 + 465 = 807.
+    	 * 
+    	 * */
+    	
+        ListNode dummyNode = new ListNode(-1,null);
+        int carry = 0;
+        ListNode resCurr = dummyNode;
+        ListNode currA = l1;
+        ListNode currB = l2;
+
+        while(currA!=null && currB!=null){
+            int sum = currA.val + currB.val + carry;
+            carry = sum/10;
+            int nodeValue = sum%10;
+            resCurr.next = new ListNode(nodeValue, null);
+            resCurr = resCurr.next;
+            currA = currA.next;
+            currB = currB.next;
+        }
+
+        while(currA!=null){
+            int sum=currA.val + carry;
+            carry = sum/10;
+            int nodeValue = sum%10;
+            resCurr.next = new ListNode(nodeValue, null);
+            resCurr = resCurr.next;
+            currA = currA.next;
+        }
+        while(currB!=null){
+            int sum=currB.val + carry;
+            carry = sum/10;
+            int nodeValue = sum%10;
+            resCurr.next = new ListNode(nodeValue, null);
+            resCurr = resCurr.next;
+            currB = currB.next;
+        }
+        if(carry > 0){
+            resCurr.next = new ListNode(carry, null);
+        }
+
+        return dummyNode.next;
+    }
 }
