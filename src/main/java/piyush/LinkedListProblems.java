@@ -359,4 +359,31 @@ public class LinkedListProblems {
 
         return dummyNode.next;
     }
+    
+    public static ListNode rotateRight(ListNode head, int k) {
+        if(head == null)
+            return head;
+        ListNode curr = head;
+        int len = 0;
+        while(curr!=null){
+            len++;
+            curr=curr.next;
+        }
+        k=k%len;
+        curr=head;
+        ListNode tail = head;
+        for(int i=0; i<k; i++){
+            tail=tail.next;
+        }
+        while(tail.next!=null)
+        {
+            tail = tail.next;
+            curr = curr.next;
+        }
+        tail.next = head;
+        head = curr.next;
+        curr.next = null;
+
+        return head;
+    }
 }
