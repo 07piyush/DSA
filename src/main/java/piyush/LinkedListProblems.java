@@ -273,5 +273,37 @@ public class LinkedListProblems {
         }
         return slow;
     }
+    
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    	
+    	/*
+    	 * Given the heads of two singly linked-lists headA and headB, 
+    	 * return the node at which the two lists intersect. If the two linked lists have no intersection at all, 
+    	 * return null.
+    	 * */
+    	
+    	
+        ListNode currA = headA;
+        ListNode currB = headB;
+        while(currA != null && currB != null){
+            if(currA == currB){
+                return currA;
+            }
+            currA = currA.next;
+            currB = currB.next;
+            if(currA == null)
+                currA = headA;
+            else if(currB == null)
+                currB = headB;
+        }
+        while(currA != null && currB != null){
+            if(currA == currB){
+                return currA;
+            }
+            currA = currA.next;
+            currB = currB.next;
+        }
+        return null;
+    }
 	
 }
