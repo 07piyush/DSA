@@ -146,5 +146,83 @@ public class StackUsingQueue {
             suffixMax[i] = height[i]>suffixMax[i+1]?height[i]:suffixMax[i+1];
         }
     }
+     
+     public int sumSubarrayMins(int[] arr) {
+    	 
+    	 /*
+    	  * Given an array of integers arr, find the sum of min(b), where b ranges over every (contiguous) subarray of arr. 
+    	  * Since the answer may be large, return the answer modulo 109 + 7.
+    	  * 
+    	  * Brute force :
+    	  * 
+    	  * 
+    	  * Optimal : 
+    	  * Analysis : 
+    	  * 1. for each element of array, find its contribution in total sum.
+    	  * its contribution will be the number subarrays that exists with that element being
+    	  * the minimum number, multiplied the element itself. 
+    	  * E.g. : contribution of 3 in array[4,3,5,7] will be  3*(no. of subArrays with 3 as min)
+    	  * 
+    	  * 2. to find contribution of each element. find all those elements to its left, and to its right
+    	  * such that the element itself is the minimum item.
+    	  * E.g. : in array[1,4,3,5,7,0] : with 3 being as minimum element in a subarray, total subarrays
+    	  * possible are those that start with either 4 or 3, and ends with 3,5,7. 3 has to be part of subarray.
+    	  * 
+    	  * formula to find total such sub arrays = (itemsToleft +1) * (itemsToRight + 1)
+    	  * note : itemsToleft are those with which sub array may start but end with current item.
+    	  * itemToright are those with which sub arrays may end but start with current item, hence multiply for total.
+    	  * 
+    	  * formula to find its total contribution = (itemsToleft +1) * (itemsToRight + 1) * item.
+    	  * 
+    	  * 3. We need to have a track of index of next smaller element, and previous smaller element. 
+    	  * total number of items to an element's left will be = (currIndex-IndexOfPSE)
+    	  * total number of items to an element's right will be = (IndexOfNSE-currIndex)
+    	  * 
+    	  * algo : 
+    	  * 1. total sum = 0.
+    	  * 2. for each item do:
+    	  * 	contribution = (currIndex-PSE[currIndex]) * (NSE[currIndex]-currIndex) * currItem
+    	  * 	totalSum = totalSum + contribution
+    	  * 
+    	  */
+    	 
+    	 long totalSum = 0;
+         int[] pse = prevSmallerElement(arr);
+         int[] nse = nextSmallerElement(arr);
+         int mod = 1000000007;
+         for(int i=0; i<arr.length; i++){
+             long leftCount = (i - pse[i]) % mod;
+             long rightCount = (nse[i] - i) % mod;
+             long icontri = (leftCount * rightCount * arr[i]) % mod;
+             totalSum = (totalSum + icontri)%mod;
+         }
+         return (int)totalSum;
+     }
+
+     public int[] nextSmallerElement(int[] arr){
+         Stack<Integer> stk = new Stack<Integer>();
+         int[] nse = new int[arr.length];
+         for(int i = arr.length-1; i >=0; i--){
+             while(!stk.isEmpty() && arr[stk.peek()] >= arr[i])
+                 stk.pop();
+             
+             nse[i] = stk.isEmpty()?arr.length:stk.peek();
+             stk.push(i);
+         }
+         return nse;
+     }
+
+     public int[] prevSmallerElement(int[] arr){
+         Stack<Integer> stk = new Stack<Integer>();
+         int[] pse = new int[arr.length];
+         for(int i = 0; i<arr.length; i++){
+             while(!stk.isEmpty() && arr[stk.peek()] > arr[i])
+                 stk.pop();
+             
+             pse[i] = stk.isEmpty()?-1:stk.peek();
+             stk.push(i);
+         }
+         return pse;
+     }
 
 }
