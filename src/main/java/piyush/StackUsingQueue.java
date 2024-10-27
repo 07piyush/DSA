@@ -10,27 +10,27 @@ public class StackUsingQueue {
 
 	private Queue<Integer> queue = new LinkedList<>();
 	private static Stack<Integer> stk = new Stack<Integer>();
-	
-	
+
+
 	public void push(int val) {
 		queue.add(val);
 		for(int i=0; i<queue.size(); i++) {
 			queue.add(queue.remove());
 		}
 	}
-	
+
 	public void pop() {
 		queue.remove();
 	}
-	
+
 	public int top() {
 		return queue.peek();
 	}
-	
+
 	public boolean isEmpty() {
 		return queue.size() == 0;
 	}
-	
+
 	public static int[] nextGreaterElement(int[] nums) {
 		/*
 		 * The next greater element of some element x in an array is the first greater 
@@ -51,20 +51,49 @@ public class StackUsingQueue {
 		 * Space = O(n)
 		 * 
 		 * */
-        int[] aux = new int[nums.length];
-        for(int i=nums.length-1; i>=0; i--){
-            while(!stk.isEmpty() && stk.peek() < nums[i]){
-                stk.pop();
-            }
-            if(stk.isEmpty()){
-                aux[i] = -1;
-            }
-            else{
-                aux[i] = stk.peek();
-            }
-            stk.push(nums[i]);
-        }
-        return aux;
-    }
-	
+		int[] aux = new int[nums.length];
+		for(int i=nums.length-1; i>=0; i--){
+			while(!stk.isEmpty() && stk.peek() < nums[i]){
+				stk.pop();
+			}
+			if(stk.isEmpty()){
+				aux[i] = -1;
+			}
+			else{
+				aux[i] = stk.peek();
+			}
+			stk.push(nums[i]);
+		}
+		return aux;
+	}
+
+	public int[] nextGreaterElements2(int[] nums) {
+
+		/*
+		 * Given a circular integer array nums 
+		 * (i.e., the next element of nums[nums.length - 1] is nums[0]), 
+		 * return the next greater number for every element in nums.
+		 *  
+		 *
+		 **/
+		
+		
+		int[] res = new int[nums.length];
+		Stack<Integer> stk = new Stack<Integer>();
+
+		for(int i=2*nums.length-1; i>=0; i--){
+			while(!stk.isEmpty() && stk.peek()<=nums[i%nums.length]){
+				stk.pop();
+			}
+			if(stk.isEmpty()){
+				res[i%nums.length] = -1;
+			}
+			else{
+				res[i%nums.length] = stk.peek();
+			}
+			stk.push(nums[i%nums.length]);
+		}
+		return res;
+	}
+
 }
