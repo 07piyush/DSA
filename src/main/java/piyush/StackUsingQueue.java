@@ -250,4 +250,98 @@ public class StackUsingQueue {
          }
          return stk.stream().mapToInt(Integer::intValue).toArray();
      }
+     
+     public long subArrayRanges(int[] nums) {
+    	 
+    	 /*
+    	  * You are given an integer array nums. 
+    	  * The range of a subarray of nums is the difference between the largest and smallest element in the subarray.
+    	  * Return the sum of all subarray ranges of nums.
+    	  * A subarray is a contiguous non-empty sequence of elements within an array.
+    	  * 
+    	  * */
+         long sumOfMinSubarraysSum = minSubarraySums(nums);
+         long sumOfMaxSubarraysSum = maxSubarraySums(nums);
+
+         return sumOfMaxSubarraysSum - sumOfMinSubarraysSum;
+     }
+     
+     public long minSubarraySums(int[] nums){
+         int[] pse = pse(nums);
+         int[] nse = nse(nums);
+         long total = 0;
+         for(int i = 0; i<nums.length; i++){
+             int left = i - pse[i];
+             int right = nse[i] - i;
+             long contri = (long) left * right * nums[i];
+             total+=(long)contri;
+         }
+         return total;
+     }
+
+     public int[] nse(int[] nums){
+         int[] nse = new int[nums.length];
+         Stack<Integer> stk = new Stack<>();
+         for(int i=nums.length-1; i>=0; i--){
+             while(!stk.isEmpty() && nums[stk.peek()] >= nums[i]){
+                 stk.pop();
+             }
+             nse[i] = stk.isEmpty()?nums.length:stk.peek();
+             stk.push(i);
+         }
+         return nse;
+     }
+
+     public int[] pse(int[] nums){
+         Stack<Integer> stk = new Stack<>();
+         int[] pse = new int[nums.length];
+         for(int i=0; i<nums.length; i++){
+             while(!stk.isEmpty() && nums[stk.peek()] > nums[i]){
+                 stk.pop();
+             }
+             pse[i] = stk.isEmpty()?-1:stk.peek();
+             stk.push(i);
+         }
+         return pse;
+     }
+
+
+     public long maxSubarraySums(int[] nums){
+         int[] pge = pge(nums);
+         int[] nge = nge(nums);
+         long total = 0;
+         for(int i = 0; i<nums.length; i++){
+             int left = i - pge[i];
+             int right = nge[i] - i;
+             long contri = (long) left * right * nums[i];
+             total+= (long) contri;
+         }
+         return total;
+     }
+
+     public int[] pge(int[] nums){
+         Stack<Integer> stk = new Stack<>();
+         int[] pge = new int[nums.length];
+         for(int i=0; i<nums.length; i++){
+             while(!stk.isEmpty() && nums[stk.peek()] < nums[i]){
+                 stk.pop();
+             }
+             pge[i] = stk.isEmpty()?-1:stk.peek();
+             stk.push(i);
+         }
+         return pge;
+     }
+
+     public int[] nge(int[] nums){
+         int[] nge = new int[nums.length];
+         Stack<Integer> stk = new Stack<>();
+         for(int i=nums.length-1; i>=0; i--){
+             while(!stk.isEmpty() && nums[stk.peek()] <= nums[i]){
+                 stk.pop();
+             }
+             nge[i] = stk.isEmpty()?nums.length:stk.peek();
+             stk.push(i);
+         }
+         return nge;
+     }
 }
