@@ -344,4 +344,62 @@ public class StackUsingQueue {
          }
          return nge;
      }
+     
+     public String removeKdigits(String num, int k) {
+    	 /*
+    	  * Given string num representing a non-negative integer num, and an integer k, 
+    	  * return the smallest possible integer after removing k digits from num.
+    	  * 
+    	  * Example 1: Input: num = "1432219", k = 3
+    	  * Output: "1219"
+    	  * Explanation: Remove the three digits 4, 3, and 2 to form the new number 1219 which is the smallest.
+    	  * 
+    	  * Intution : a number is smallest if all numbers from left to right are in increasing order.
+    	  * to remove k digits such that final number is smallest, we need to find those sub arrays
+    	  * that have strictly increasing order of digits. 
+    	  * 
+    	  * Brute force : find size of String. Find all possible sub arrays. mark a sub array as result
+    	  * if it has strictly increasing digits.
+    	  * 
+    	  * Optimal : traverse from left to right, keep a digit in resultant string if it larger than prev.
+    	  * Edge cases : 
+    	  * 1. when after removing k items, leading digits are 0. 
+    	  * 2. when array is already minimum, so k values from right must be removed.
+    	  * 3. when k = size of array.
+    	  * 
+    	  * */
+    	 
+         if(k == num.length())
+             return "0";
+             
+         StringBuilder stk = new StringBuilder();
+         for(int i=0; i<num.length(); i++){
+             while(!stk.isEmpty() && num.charAt(i) < top(stk) && k!=0){
+                 k--;
+                 pop(stk);
+             }
+             stk.append(num.charAt(i));
+         }
+         
+         while(!stk.isEmpty() && stk.charAt(0) == '0')
+             stk.deleteCharAt(0);
+         
+         while(!stk.isEmpty() && k!=0){
+             pop(stk);
+             k--;
+         }
+
+         if(stk.isEmpty()){
+             stk.append('0');
+         }
+             
+         return stk.toString();
+     }
+
+     public char top(StringBuilder stk){
+         return stk.charAt(stk.length()-1);
+     }
+     public void pop(StringBuilder stk){
+          stk.deleteCharAt(stk.length()-1);
+     }
 }
