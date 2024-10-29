@@ -402,4 +402,31 @@ public class StackUsingQueue {
      public void pop(StringBuilder stk){
           stk.deleteCharAt(stk.length()-1);
      }
+     
+     public int largestRectangleArea(int[] heights) {
+    	 /*
+    	  *Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, 
+    	  *return the area of the largest rectangle in the histogram.
+    	  *
+    	  *Input: heights = [2,1,5,6,2,3]
+    	  *Output: 10
+    	  * 
+    	  * Brute force : 
+    	  * find contribution of individual bar, compare with maximum. return.
+    	  * contribution of individual bar = area of all the bars start from x to y multiplied its length.
+    	  * 
+    	  * Time = O(5n)
+    	  * Space = O(4n)
+    	  * 
+    	  * */
+         int[] pse = pse(heights);
+         int[] nse = nse(heights);
+         int largestArea = 0;
+         for(int i=0; i<heights.length; i++){
+
+             int contri = heights[i] * (nse[i] - pse[i] - 1);
+             largestArea = contri>largestArea?contri:largestArea;
+         }
+         return largestArea;
+     }
 }
