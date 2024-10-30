@@ -480,4 +480,29 @@ public class StackUsingQueue {
          }
          return maxArea;
      }
+     
+     public int maximalRectangle(char[][] matrix) {
+    	 
+    	 /*
+    	  * Given a rows x cols binary matrix filled with 0's and 1's, 
+    	  * find the largest rectangle containing only 1's and return its area.
+    	  * 
+    	  * Optimal : consider each row as a histogram.
+    	  * each consecutive 1 in a column increases height of that column.
+    	  * 
+    	  * so for each row, keep adding 1 if encountered 1 else mark it 0.
+    	  * 
+    	  * */
+    	 
+         int[] array = new int[matrix[0].length];
+         int max = 0;
+         for(int row=0; row<matrix.length; row++){
+             for(int cell=0; cell<matrix[row].length; cell++){
+                 array[cell] = matrix[row][cell] == '1'?array[cell]+1:0;
+             }
+             int currMax = largestRectangleAreaOptimised(array);
+             max = currMax>max?currMax:max;
+         }
+         return max;
+     }
 }
