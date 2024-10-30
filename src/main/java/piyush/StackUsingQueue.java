@@ -429,4 +429,55 @@ public class StackUsingQueue {
          }
          return largestArea;
      }
+     
+     public int largestRectangleAreaOptimised(int[] heights) {
+    	 /*
+    	  * area of a bar of height h = area of all those bars that are of height h or greater than h.
+    	  * [0, 1, 2, 3A, 4, 5, 6, 7A, 8] if 3A and 7A are those position which contain all bars of at least height h.
+    	  * then area is barHeight * barWidth * totalBars.
+    	  * totalBars is count of bars from position 3A to 7A = 7-3+1 = 4.
+    	  * 
+    	  * if 3A and 7A are of height less than h, this means all between them are of height h.
+    	  * then total bars in between = (7-3+1)-2 = 7-3-1.
+    	  * 
+    	  * using this logic we will use position of previous smaller element, and next smaller element.
+    	  * and total bars of height h in between = nse-pse-1.
+    	  * 
+    	  * Solution : iterate on each bar of heights. while iterating we will stack up positions
+    	  * untill we encounter an item whose height is less than previous.
+    	  * idea is we want nse, pse of an element. when a bar of height less than stack top is
+    	  * encountered we know current element is nse of whatever is on stack top.
+    	  * 
+    	  * in this way nse = currentIndex of iteration.
+    	  * 			pse = stack.top.
+    	  * 
+    	  * Time = O(2n)
+    	  * Space= O(n)
+    	  * 
+    	  * */
+         int maxArea = 0;
+         Stack<Integer> stk = new Stack<>();
+
+         for(int i=0; i<heights.length; i++){
+             while(!stk.isEmpty() && heights[stk.peek()] > heights[i]){
+                 //target
+                 int currIndex = stk.peek();
+                 stk.pop();
+                 int nse = i;
+                 int pse = stk.isEmpty()?-1:stk.peek();
+                 int area = (nse - pse -1)*heights[currIndex];
+                 maxArea = area>maxArea?area:maxArea;
+             }
+             stk.push(i);
+         }
+         while(!stk.isEmpty()){
+             int nse = heights.length;
+             int curr = stk.peek();
+             stk.pop();
+             int pse = stk.isEmpty()?-1:stk.peek(); 
+             int area = (nse - pse - 1)*heights[curr];
+             maxArea = area>maxArea?area:maxArea;
+         }
+         return maxArea;
+     }
 }
