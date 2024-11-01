@@ -1,6 +1,7 @@
 package piyush;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -505,4 +506,48 @@ public class StackUsingQueue {
          }
          return max;
      }
+     
+     public int[] maxSlidingWindow(int[] nums, int k) {
+
+    	 /*	You are given an array of integers nums, there is a sliding window of size k which is moving from the very 
+    	  * left of the array to the very right. 
+    	  * You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+    	  * 
+    	  * Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+    	  * Output: [3,3,5,5,6,7]
+    	  * 
+    	  * Brute force : use two pointers as edges of window. while sliding the window, find local maximum for
+    	  * each window. as the window slide maintain a global maximum. 
+    	  * Time = O(n*k)
+    	  * Space = O(1)
+    	  * 
+    	  * Optimal : while iterating on input array, 1. keep maximum 2. only keep maximum if it is inside window.
+    	  * 3. current element can be either maximum of window or potential maximum for next window.
+    	  * 4. so remember current element in any case, and remove those previous items of window that are smaller (useless)
+    	  * 
+    	  * Use double ended queue.
+    	  * 
+    	  * Time = O(2n)
+    	  * Space = O(n); queue will store all items if input array is in increasing order.
+    	  * 
+    	  * */
+    	 
+         Deque<Integer> dq = new LinkedList<>();
+         int[] result = new int[nums.length-k+1];
+         int currentResult = 0;
+         for(int i=0; i<nums.length; i++){
+             if(!dq.isEmpty() && dq.peekFirst() <= i-k){
+                 dq.removeFirst();
+             }
+             while(!dq.isEmpty() && nums[dq.peekLast()] <= nums[i]){
+                 dq.removeLast();
+             }
+             dq.addLast(i);
+             if(i >= k-1){
+                 result[currentResult++] = nums[dq.peekFirst()];
+             }            
+         }
+         return result;
+     }
+     
 }
