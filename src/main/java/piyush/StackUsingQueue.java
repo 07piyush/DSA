@@ -11,8 +11,7 @@ public class StackUsingQueue {
 
 	private Queue<Integer> queue = new LinkedList<>();
 	private static Stack<Integer> stk = new Stack<Integer>();
-
-
+	
 	public void push(int val) {
 		queue.add(val);
 		for(int i=0; i<queue.size(); i++) {
@@ -549,5 +548,4 @@ public class StackUsingQueue {
          }
          return result;
      }
-     
 }
