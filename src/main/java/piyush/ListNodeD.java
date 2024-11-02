@@ -4,6 +4,7 @@ public class ListNodeD {
 	
 	int key;
 	int value;
+	int freq;
 	ListNodeD next;
 	ListNodeD prev;
 	
@@ -12,5 +13,6 @@ public class ListNodeD {
 		value = -1;
 		next = null;
 		prev = null;
+		freq=1;
 	}
 }
