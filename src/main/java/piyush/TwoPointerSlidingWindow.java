@@ -52,5 +52,50 @@ public class TwoPointerSlidingWindow {
 		}
 		return maxLen;
     }
+	
+	public int longestOnes(int[] nums, int k) {
+		/*
+		 * Given a binary array nums and an integer k, 
+		 * return the maximum number of consecutive 1's in the array if you can flip at most k 0's.
+		 * 
+		 * Brute Force : for each substring find if it meets the condition of consecutive 1 k 0s. 
+		 * For each size of subtr from 0 to n :
+		 * 	For each item as start till size : 
+		 * 		For each item if 0 and countZ < k. assign length to max if greater than max.
+		 *
+		 * Time = O(n3)
+		 * Space = O(1)
+		 * 
+		 * Optimal : create a window of size 0, based on conditions change window size while also sliding towards left.
+		 * condition for size of window is left will move when right is at 0 and have already seen k zeros.
+		 * right will move always.
+		 * calculate maximum length if number of zeros in window is <= k.
+		 * 
+		 * Time = O(n)
+		 * Space =O(1)
+		 * 
+		 * */
+        int zeros = 0;
+        int right = 0;
+        int left = 0;
+        int longest = 0;
+        while(right < nums.length){
+            if(nums[right] == 0) zeros++;
+            
+            if(zeros > k){
+                if(nums[left] == 0)
+                    {
+                        zeros--;
+                    }
+                     left++;
+            }
+            if(zeros <= k){
+                int curL = right-left+1;
+                longest = curL>longest?curL:longest;
+            }
+            right++;
+        }
+        return longest;
+    }
 
 }
