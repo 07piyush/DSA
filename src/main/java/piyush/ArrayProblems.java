@@ -1,6 +1,8 @@
 package piyush;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class ArrayProblems {
 
@@ -347,5 +349,46 @@ public class ArrayProblems {
                  }
              }
          }
+    }
+    
+    public static List<Integer> majorityElementII(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        int candidate1 = Integer.MIN_VALUE;
+        int candidate2 = Integer.MIN_VALUE;
+        int votes1 = 0;
+        int votes2 = 0;
+
+        for(int i=0; i<nums.length; i++){
+            if(votes1 == 0 && nums[i]!=candidate2){
+                candidate1 = nums[i];
+                votes1 = 1;
+            }
+            else if(votes2 == 0 && nums[i]!=candidate1){
+                candidate2 = nums[i];
+                votes2 = 1;
+            }
+            else if(nums[i] == candidate1)
+                votes1++;
+            else if(nums[i] == candidate2)
+                votes2++;
+            else{
+                votes1--; 
+                votes2--;
+            }
+        }
+
+        int minimumVotes = (nums.length/3) + 1;
+        int finalVotes1 = 0;
+        int finalVotes2 = 0;
+        for(int i=0; i<nums.length; i++){
+            if(nums[i] == candidate1) finalVotes1++;
+            if(nums[i] == candidate2) finalVotes2++;
+        }
+        if(finalVotes1 >= minimumVotes)
+            result.add(candidate1);
+        if(finalVotes2 >= minimumVotes)
+            result.add(candidate2);
+        
+        return result;
     }
 }
