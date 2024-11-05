@@ -1,8 +1,11 @@
 package piyush;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ArrayProblems {
 
@@ -390,5 +393,47 @@ public class ArrayProblems {
             result.add(candidate2);
         
         return result;
+    }
+    
+    public List<List<Integer>> threeSum(int[] nums) {
+    	/*
+    	 * Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] 
+    	 * such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+    	 * 
+    	 * Example 1: Input: nums = [-1,0,1,2,-1,-4] Output: [[-1,-1,2],[-1,0,1]]
+    	 * 
+    	 * Brute force : for each possible i, j, k. calculate sum and create triplet if sum is 0.
+    	 * to make sure that each triplet is unique. sort the triplet and store in set.
+    	 * 
+    	 * Time = O(n3)  Space = O(1)
+    	 * 
+    	 * Optimization 1 : since nums[i] + nums[j] = - (nums[k])
+    	 * for each pair i, j check if there is -nums[k] in array, create triplet if yes. sort triplet.
+    	 * use hashset for memorizing elements.
+    	 * NOTE : do not keep whole array in hashset. why?
+    	 * 
+    	 * Time = O(n2) space = O(n)
+    	 * 
+    	 * Optimzation 2 : three pointers
+    	 * 
+    	 * */
+    	
+    	HashSet<Integer> memo = new HashSet<>();
+    	Set<List<Integer>> st = new HashSet<>();
+    	
+    	for(int i=0; i<nums.length; i++) {
+    		for(int j=i+1; j<nums.length; j++) {
+    			//for every pair, find sum, look in memory and decide if triplet.
+    			int target = -1 * (nums[i] + nums[j]);
+    			if(memo.contains(target)) {
+    				List<Integer> triplet = new ArrayList<>(Arrays.asList(nums[i], nums[j], target));
+    				Collections.sort(triplet);
+    				st.add(triplet);
+    			}
+    			memo.add(nums[j]);
+    		}
+    		memo.clear();
+    	}
+    	return new ArrayList<>(st);
     }
 }
