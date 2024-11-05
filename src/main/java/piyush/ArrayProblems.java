@@ -436,4 +436,56 @@ public class ArrayProblems {
     	}
     	return new ArrayList<>(st);
     }
+    
+    public List<List<Integer>> threeSumOptimal(int[] nums) {
+    	/*
+    	 * Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] 
+    	 * such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+    	 * 
+    	 * Example 1: Input: nums = [-1,0,1,2,-1,-4] Output: [[-1,-1,2],[-1,0,1]]
+    	 * 
+    	 * Optimzation 2 : 1. every time we were creating a result we would sort it.
+    	 * 					2. we were processing/looking to an element for all i j and k, while if we have selected 
+    	 *  triplet then we should ignore that triplet of numbers.
+    	 *  
+    	 *  So sort the array, in this way all the similar items will cummulate together, and once we consider a triplet
+    	 *  do not do all the checks again for that triplet. also every triplet will be automatically sorted.
+    	 *  since we want a[i] + a[j} = - a[k] so for each i and j pair, we can search value = -a[k].
+    	 * */
+    	Arrays.sort(nums);
+    	List<List<Integer>> result = new ArrayList<>();
+    	for(int i=0; i<nums.length; i++) {
+    		int j = i+1;
+    		int k = nums.length-1;
+    		if(i!=0 && nums[i] == nums[i-1]) {
+    			continue;	
+    		}
+    		while(j < k) {
+    			if(nums[i] + nums[j] + nums[k] < 0) {
+    				int ignoreValue = nums[j];
+    				while(j < k && nums[j] == ignoreValue) {
+    					j++;
+    				}
+    			}
+    			else if(nums[i] + nums[j] + nums[k] > 0) {
+    				int ignoreValue = nums[k];
+    				while(j < k && nums[k] == ignoreValue) {
+    					k--;
+    				}
+    			}
+    			else {
+    				result.add(Arrays.asList(nums[i], nums[j], nums[k]));
+    				int processedj = nums[j];
+    				int processedk = nums[k];
+    				while(j < k && nums[j] == processedj) {
+    					j++;
+    				}
+    				while(j < k && nums[k] == processedk) {
+    					k--;
+    				}
+    			}
+    		}
+    	}
+    	return result;
+    }
 }
