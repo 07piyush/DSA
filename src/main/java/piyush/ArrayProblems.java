@@ -106,7 +106,7 @@ public class ArrayProblems {
     	 * Explanation: The subarray [4,-1,2,1] has the largest sum 6.
     	 * 
     	 * Brute Force : try all sub array combinations, maintain maximum sum. : 
-    	 * Time = O(n3) 
+    	 * Time = O(n2) 
     	 * 
     	 * Optimal 1 : Kadane's algorithm : starting with maximumSum = minimum possible value. 
     	 * traverse the array, for each item maintain a currentSum, if currentSum is greater than maximumSum
@@ -487,5 +487,40 @@ public class ArrayProblems {
     		}
     	}
     	return result;
+    }
+    
+    public int[][] merge(int[][] intervals) {
+    	/*
+    	 * Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+    	 * Example 1: 
+    	 * Input: intervals = [[1,3],[2,6],[8,10],[15,18]] 
+    	 * Output: [[1,6],[8,10],[15,18]] 
+    	 * Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+    	 * 
+    	 * Brute force : sort the intervals, considering first interval as final, look next pairs.
+    	 * if interval overlap, update final interval. if not, then push final into result and start over
+    	 * from current pair as fresh pair.
+    	 * 
+    	 * */
+    	List<List<Integer>> result = new ArrayList<>();
+    	Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+    	int[] currentInterval = intervals[0];
+    	for(int [] pair : intervals) {
+    		if(pair[0] <= currentInterval[1]) {
+    			currentInterval[1] = pair[1]>currentInterval[1]?pair[1]:currentInterval[1];
+    		}
+    		else {
+    			result.add(new ArrayList<>(Arrays.asList(currentInterval[0], currentInterval[1])));
+    			currentInterval = pair;
+    		}
+    	}
+    	//add last interval as loop got over and it was not added.
+    	result.add(new ArrayList<>(Arrays.asList(currentInterval[0], currentInterval[1])));
+    	int[][] res = new int[result.size()][2];
+    	for(int i=0; i<result.size(); i++) {
+    		res[i][0] = result.get(i).get(0);
+    		res[i][1] = result.get(i).get(1);
+    	}
+    	return res;
     }
 }
