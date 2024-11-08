@@ -197,4 +197,37 @@ public class Search {
         }
         return false;
     }
+	
+
+	public int findMin(int[] nums) {
+		/*
+		 * find minimum element in a sorted array, which is rotated arbitrary times.
+		 * 
+		 * Solution : if an array is rotated, then the side which is in sorted order may or may not have
+		 * the minimum element, even if sorted part have minimum element, we can always check that in constant time
+		 * as minimum in sorted is always leftmost. i.e nums[left].
+		 * 
+		 * so check minimum from sorted, and continue the search on unsorted part.
+		 * 
+		 * Time = O(log n)
+		 * */
+		
+        int left = 0;
+        int right = nums.length-1;
+        int min = Integer.MAX_VALUE;
+        while(left <= right){
+            int mid = (left+right)/2;
+            if(nums[mid] < min)
+                min = nums[mid];
+            if(nums[left] <= nums[mid]){
+                min = nums[left]<min?nums[left]:min;
+                left = mid+1;
+            }
+            else{
+                min = nums[mid+1]<min?nums[mid+1]:min;
+                right = mid-1;
+            }
+        }
+        return min;
+    }
 }
