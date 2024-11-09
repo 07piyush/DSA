@@ -230,4 +230,54 @@ public class Search {
         }
         return min;
     }
+	
+	public int singleNonDuplicate(int[] nums) {
+		/*
+		 * You are given a sorted array consisting of only integers where every element appears exactly twice, 
+		 * except for one element which appears exactly once. Return the single element that appears only once.
+		 * 
+		 * E.g. : [1,1,2,3,3,4,4,8,8]
+		 * Output : 2
+		 * 
+		 * brute force : linear search, return the element that is same as its next.
+		 * 
+		 * Optimal : since the array is sorted, some how we can eliminate one of the half.
+		 * 
+		 * observation. 1. pair will be in combination of (odd, even) index, unless a single is encountered.
+		 * once a single is encountered, pair will be found in (even, odd) indices.
+		 * 
+		 * hence when mid is standing at a point, either it is single himself.
+		 * or single reside in left half or in right half. 
+		 * if middle and left are same while mid is at odd index, or middle and right are same while mid is
+		 * at even index. then all values to left of middle are pairs.
+		 *  		 L			 M				R	
+		 * 		 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]			
+		 * E.g : [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+		 * 		 [O, E, O, E, O, E, O, E, O, E, O, E
+		 * */
+        int left = 0;
+        int right = nums.length-1;
+        int result = -1;
+        if(nums.length == 1)
+            return nums[0];
+        if(nums[0] != nums[1])
+            return nums[0];
+        if(nums[nums.length-1] != nums[nums.length-2])
+            return nums[nums.length-1];
+        left++;
+        right--;
+        while(left<=right){
+            int mid = (left+right)/2;
+
+            if(nums[mid] != nums[mid+1] && nums[mid-1] != nums[mid])
+                return nums[mid];
+            
+            if(mid%2 == 0 && nums[mid+1] == nums[mid] || 
+                mid%2==1 && nums[mid-1] == nums[mid])
+                left = mid+1;
+            else
+                right = mid-1;
+        }
+        return result;
+    }
 }
