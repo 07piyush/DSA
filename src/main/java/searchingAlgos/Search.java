@@ -280,4 +280,53 @@ public class Search {
         }
         return result;
     }
+	
+	public int findPeakElement(int[] nums) {
+		/*
+		 * Find Peak Element 
+		 * A peak element is an element that is strictly greater than its neighbors.
+		 * 
+		 * IMP NOTE : Constraints:
+		 * 1 <= nums.length <= 1000 
+		 * -231 <= nums[i] <= 231 - 1 
+		 * nums[i] != nums[i + 1] for all valid i.
+		 * 
+		 * brute force : perform linear search, each element is either our answer or potential answer.
+		 * let first element be our candidate. (since according to question, we can assume every thing before and after
+		 * provided is -infinity)
+		 * for each candidate check if next element is greater, if yes then candidate is our answer.
+		 * if not then next element will become our candidate.
+		 * 
+		 * Time = O(n)
+		 * 
+		 * Optimal : if we find mid of array, it will satisfy any of three conditions :
+		 * 1. mid is peak.
+		 * 2. mid is part of increasing trend. : then peak lies in right part of mid.
+		 * 3. mid is part of decreasing trend. : then peak lies in left part of mid.
+		 * 
+		 * 
+		 * */
+		
+        if(nums.length == 1)
+            return 0;
+        if(nums[0] > nums[1])
+            return 0;
+        if(nums[nums.length-1] > nums[nums.length-2])
+            return nums.length-1;
+        int left = 1;
+        int right = nums.length-2;
+
+        while(left <= right){
+            int mid = (left+right)/2;
+
+            if(nums[mid-1] < nums[mid] && nums[mid] > nums[mid+1])
+                return mid;
+            
+            if(nums[mid+1] < nums[mid])
+                right = mid-1;
+            else
+                left = mid+1;
+        }
+        return -1;
+    }
 }
