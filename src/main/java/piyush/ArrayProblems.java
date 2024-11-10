@@ -111,8 +111,8 @@ public class ArrayProblems {
     	 * Optimal 1 : Kadane's algorithm : starting with maximumSum = minimum possible value. 
     	 * traverse the array, for each item maintain a currentSum, if currentSum is greater than maximumSum
     	 * then choose currentSum as maximumSum. while we are maintaining currentSum by adding array elements.
-    	 * we will reset currentSum to zero and start over the hunt of finding maximum sum when currentSum goes less than 0,
-    	 * while also maintaining maximumSum. 
+    	 * we will reset currentSum to zero and start over the hunt of finding maximum sum when currentSum goes 
+    	 * less than 0,while also maintaining maximumSum. 
     	 * 
     	 * Optimal 2: Divide and conquer. 
     	 * */
@@ -224,6 +224,16 @@ public class ArrayProblems {
     	 * Optimized : for lexicographically correct arrangement, i.e last arrangement there will be 
     	 * strictly increasing trend from backwards. E.g [5,4,3,2,1] it can not be further arranged.
     	 * 
+    	 * E.g : for input : [2,1,5,4,3,0,0] 
+    	 * Observation : next permutation is next immediate larger number possible with digits in array.
+    	 * so we need to find the digit, due to which we are not able to reach strictly increasing trend from backwards.
+    	 * while traversing from back, find number which is smaller than its previous.
+    	 * it must be replaced with next greater number.
+    	 * when replaced with next greater number, we have ensured that number starting with prefix+current,
+    	 * can now be created which will ensure next permutation if all digits after current are in decreasing order.
+    	 * 
+    	 * now since we traversed with condition to stop only when strictly increasing trend is violated,
+    	 * we can just reverse the array to find minimum number.
     	 * 
     	 * if there is a violation at any place, then that will be the place where next greater value must come.
     	 * 
