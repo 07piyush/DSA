@@ -329,4 +329,69 @@ public class Search {
         }
         return -1;
     }
+	
+	public static int minEatingSpeed(int[] piles, int h) { 
+		/*
+		 * koko have piles of bananas, each index has a pile.
+		 * she can eat k number of bananas in an hour.
+		 * she has h hours in total, find minimum k, such that she eats k bananas each hour
+		 * so that all bananas are finished in h hours.
+		 * 
+		 * Return the minimum integer k such that she can eat all the bananas within h hours.
+		 * 
+		 * E.g :Input: piles = [3,6,7,11], h = 8
+		 * Output: 4
+		 * 
+		 * Explanation :when she can eat 1/2/3/4/5...10/11. bananas in an hour.
+		 * to finish them in 4 hours if she eat 11 banana per hour. 
+		 * she can not eat more than 11 (maximum possible) bananas in an hour.
+		 * if she eats 2 bananas in an hour, she will require [2+3+4+6]=15 hours to finish but she has only 8.
+		 * that means she must increase number of bananas per hour.
+		 * 
+		 *  so minimum can range in [1 : max(piles)].
+		 *  
+		 *  Brute force : for each hourlyCapacity[1:max(piles)] calculate time taken to finish, only return 
+		 *  for first such capacity. else keep considering larger hourlyCapacity.
+		 *  Time = O(max(piles)*n) == O(n2) if max is equal to size of array;
+		 *  
+		 * optimal : there is a hourlyCapacity, after which koko will be able to finish all bananas in h hours.
+		 * but we are interested in minimum of that.
+		 * 
+		 * Eg. [1,2,3,4,5,6,7,8,9,10,11] : possible hourlyCapacity.
+		 * 	   [x,x,x,Y,Y,Y,Y,Y,Y,Y ,Y ] : here that number is 4. so do a binary search for that.
+		 * 
+		 * 
+		 * */
+        int left = 1;
+        int right = max(piles);
+
+        while(left<=right){
+            int mid = (left+right)/2;
+            long hoursTaken = hoursTaken(piles, mid);
+            if(hoursTaken <= h){
+                right = mid-1;
+            }
+            else {
+                left = mid+1;
+            }
+        }
+        return left;
+    }
+    public static int hoursTaken(int[] piles, int capacity){
+        int ans = 0;
+        for(int i=0; i<piles.length; i++){
+        	ans += Math.ceil((double)(piles[i]) / (double)(capacity));
+        }
+        return ans;
+    }
+
+    public static int max(int[] arr){
+        int max = arr[0];
+        for(int i=1; i<arr.length; i++){
+            if(arr[i] > max){
+                max = arr[i];
+            }
+        }
+        return max;
+    }
 }
