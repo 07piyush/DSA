@@ -394,4 +394,62 @@ public class Search {
         }
         return max;
     }
+    
+    public static int smallestDivisor(int[] nums, int threshold) {
+    	/*
+    	 * Given an array of integers nums and an integer threshold, we will choose a positive integer divisor, 
+    	 * divide all the array by it, and sum the division's result. 
+    	 * Find the smallest divisor such that the result mentioned above is less than or equal to threshold.
+    	 * 
+    	 * Input: nums = [44,22,33,11,1], threshold = 5
+    	 * Output: 44
+    	 * 
+    	 * Brute force : for each number as divisor, find the sum after division. if sum is less than threshold,
+    	 * then assign it to globalmin answer if less than globalmin.
+    	 * 
+    	 * Time = O(n2) | Space = O(1)
+    	 * 
+    	 * Optimal : answer can range from 1 to maximum element value in array. so via binary search we can find
+    	 * answer optimally by rejecting other permutations.
+    	 * 
+    	 * Time = O(n * logn) | space = O(1)
+    	 * */
+        int[] minMax = getMinMax(nums);
+        int low = 1;
+        int high = minMax[1];
+        int answer = high;
+        while(low<=high){
+            int mid = (low+high)/2;
+            if(isEligibleNumber(nums, threshold, mid)){
+                answer = mid<=answer?mid:answer;
+                high = mid-1;
+            }
+            else
+                low = mid+1;
+        }
+        return answer;
+    }
+
+    public static boolean isEligibleNumber(int[] arr, int th, int num){
+        
+        int sum = 0;
+        for(int i=0; i<arr.length; i++){
+            sum += Math.ceil((double)(arr[i])/(double)(num));            
+        }
+        if(sum<=th)
+            return true;
+        else 
+            return false;
+    }
+
+    public static int[] getMinMax(int[] arr){
+         int[] minMax = new int[2];
+         minMax[0] = Integer.MAX_VALUE;
+         minMax[1] = Integer.MIN_VALUE;
+         for(int i=0; i<arr.length; i++){
+             minMax[0] = arr[i]<minMax[0]?arr[i]:minMax[0];
+             minMax[1] = arr[i]>minMax[1]?arr[i]:minMax[1];
+         }
+         return minMax;
+     }
 }

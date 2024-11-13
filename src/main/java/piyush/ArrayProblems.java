@@ -533,4 +533,53 @@ public class ArrayProblems {
     	}
     	return res;
     }
+    
+    public static int minDays(int[] bloomDay, int m, int k) {
+    	 if(m*k > bloomDay.length)
+             return -1;
+        int minDays = Integer.MAX_VALUE;
+        int[] minMaxDays = maxDays(bloomDay);
+        int low = minMaxDays[0];
+        int high = minMaxDays[1];
+        while(low<=high){
+             int mid = (high+low)/2;
+             int noOfBunches = getNoPossibleBunches(bloomDay, mid, k);
+             if(noOfBunches >= m){
+                 minDays = mid<minDays?mid:minDays;
+                 high = mid-1;
+             }
+             else
+                 low = mid+1;
+        }
+        return low;
+     }
+
+     public static int getNoPossibleBunches(int[] arr, int target, int k){
+         int currCount = 0;
+         int bunches = 0;
+         for(int i=0; i<arr.length; i++){
+             if(arr[i] <= target){
+                 currCount++;
+                 if(currCount >= k){
+                     bunches++;
+                     currCount=0;
+                 }
+             }
+             else{
+                 currCount = 0;
+             }
+         }
+         return bunches;
+     }
+
+     public static int[] maxDays(int[] arr){
+         int[] minMax = new int[2];
+         minMax[0] = arr[0];
+         minMax[1] = arr[1];
+         for(int i=1; i<arr.length; i++){
+             minMax[0] = arr[i]<minMax[0]?arr[i]:minMax[0];
+             minMax[1] = arr[i]>minMax[1]?arr[i]:minMax[1];
+         }
+         return minMax;
+     }
 }
