@@ -526,4 +526,57 @@ public class Search {
         else
             return false;
     }
+    
+    public int findKthPositive(int[] arr, int k) {
+    	/*
+    	 * Given an array arr of positive integers sorted in a strictly increasing order, and an integer k.
+    	 * Return the kth positive integer that is missing from this array.
+    	 * 
+    	 * Input: arr = [2,3,4,7,11], k = 5 
+    	 * Output: 9 Explanation: The missing positive integers are [1,5,6,8,9,10,12,13,...]. 
+    	 * The 5th missing positive integer is 9.
+    	 * 
+    	 * brute force : from 1 to maximum(arr) keep monitoring missing numbers, when count of missing reaches k, 
+    	 * return i;
+    	 * Time = O(n)
+    	 * 
+    	 * optimal : if no number is missing, then in the array the each element will represent its index+1.
+    	 * hence if an element is not equal to index+1 then it is deviated from it original position.
+    	 * 
+    	 * deviation represents number of numbers that were skipped. deviation = arr[i]-i-1
+    	 * if we start a binary search from 1 as low and last of array as high, we can reject part of array if required 
+    	 * number to find (kth missing element) is less or more than deviation from middle of array.
+    	 * 
+    	 * when middle is deviated by just 3 digits, and we are looking for 5th missing element, that 
+    	 * we no that only 3 elements were missing on left side of middle. hence go search in right part of array.
+    	 * 
+    	 * when loop end : high > low. this means missing kth element is between the range [high, low].
+    	 * 
+    	 * high represent that missing element is greater than arr[high] and low represent missing element in lesser.
+    	 * REMEMBER high is sitting at low-1 after loop ends.
+    	 * arr[high] + more = this mean just calculate more elements after a[high]
+    	 * 
+    	 * more = k - deviation at high.
+    	 * 		= k - (arr[high] - h - 1)
+    	 * 		= k - arr[high] + h + 1
+    	 * 
+    	 * hence return arr[high] + k - arr[high] + h + 1;
+    	 * 		 return k + h + 1;
+    	 *  OR   return k+low;		since low = h+1 after the loop.
+    	 *  
+    	 *  Time = O(logn)  | Space = O(1)
+    	 * */
+        int low = 0;
+        int high = arr.length-1;
+
+        while(low<=high){
+            int mid = (low+high)/2;
+            int deviation = arr[mid]-mid-1;
+            if(deviation<k)
+                low = mid+1;
+            else
+                high = mid-1;
+        }
+        return k+high+1;
+    }
 }
