@@ -1,5 +1,8 @@
 package heaps;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
 
 public class kthLargestSmallest {
@@ -47,5 +50,30 @@ public class kthLargestSmallest {
                 minHeap.poll();
         }
         return minHeap.peek();
+    }
+	
+	public int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int[] result = new int[k];
+        
+        PriorityQueue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(
+        		(a,b) -> a.getValue() - b.getValue()
+        		);
+        for(int i=0; i < nums.length; i++) {
+        	map.put(nums[i], map.getOrDefault(nums[i],0)+1);
+        }
+        
+        for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
+        	minHeap.add(entry);
+        	if(minHeap.size() > k) {
+        		minHeap.poll();
+        	}
+        }
+        int resIndex = 0;
+        while(minHeap.size() > 0) {
+        	result[resIndex++] = minHeap.poll().getKey();
+        }
+        
+		return result;
     }
 }
