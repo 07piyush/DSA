@@ -29,7 +29,7 @@ public class kthLargestSmallest {
 	 * 
 	 * 
 	 * */
-	
+
 	public int findKthLargest(int[] nums, int k) {
 		/*
 		 * Given an integer array nums and an integer k, return the kth largest element in the array.
@@ -43,37 +43,84 @@ public class kthLargestSmallest {
 		 * Optimal : using minHeap. Heap always stores unique values, it would never keep duplicate items.
 		 * 
 		 * */
-        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
-        for(int num : nums){
-            minHeap.add(num);
-            if(minHeap.size() > k)
-                minHeap.poll();
-        }
-        return minHeap.peek();
-    }
-	
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+		for(int num : nums){
+			minHeap.add(num);
+			if(minHeap.size() > k)
+				minHeap.poll();
+		}
+		return minHeap.peek();
+	}
+
 	public int[] topKFrequent(int[] nums, int k) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        int[] result = new int[k];
-        
-        PriorityQueue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(
-        		(a,b) -> a.getValue() - b.getValue()
-        		);
-        for(int i=0; i < nums.length; i++) {
-        	map.put(nums[i], map.getOrDefault(nums[i],0)+1);
-        }
-        
-        for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
-        	minHeap.add(entry);
-        	if(minHeap.size() > k) {
-        		minHeap.poll();
-        	}
-        }
-        int resIndex = 0;
-        while(minHeap.size() > 0) {
-        	result[resIndex++] = minHeap.poll().getKey();
-        }
-        
+		/*
+		 * Given an integer array nums and an integer k, 
+		 * return the k most frequent elements. You may return the answer in any order.
+		 * 
+		 * Input: nums = [1,1,1,2,2,3], k = 2 
+		 * Output: [1,2]
+		 * 
+		 * */
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int[] result = new int[k];
+
+		PriorityQueue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(
+				(a,b) -> a.getValue() - b.getValue()
+				);
+		for(int i=0; i < nums.length; i++) {
+			map.put(nums[i], map.getOrDefault(nums[i],0)+1);
+		}
+
+		for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
+			minHeap.add(entry);
+			if(minHeap.size() > k) {
+				minHeap.poll();
+			}
+		}
+		int resIndex = 0;
+		while(minHeap.size() > 0) {
+			result[resIndex++] = minHeap.poll().getKey();
+		}
+
 		return result;
-    }
+	}
+
+	public String kthLargestNumber(String[] nums, int k) {
+		/*
+		 * You are given an array of strings nums and an integer k. Each string in nums represents an integer without leading zeros.
+		 * Return the string that represents the kth largest integer in nums. 
+		 * Note: Duplicate numbers should be counted distinctly. For example, if nums is ["1","2","2"], "2" is the 
+		 * first largest integer, "2" is the second-largest integer, and "1" is the third-largest integer.
+		 * 
+		 * Example 1: Input: nums = ["3","6","7","10"], k = 4
+		 * Output: "3"
+		 * Explanation: The numbers in nums sorted in non-decreasing order are ["3","6","7","10"].
+		 * The 4th largest integer in nums is "3".
+		 * 
+		 * Custom comparator : since value of individual string representation of a number can be of any size
+		 * using Long or BigInt will not handle cases with numbers out of their limit, also will have overhead of
+		 * object creation.
+		 * 
+		 * using custom comparator to use properties of string representation of number. 
+		 * 1. larger string length larger the number.
+		 * 2. for same string lengths, two lexicographical ordered string are ordered by order of individual char.
+		 * and lexicographically individual character '1', '2', '3', ...'9' is same order as 1, 2, 3...9. 
+		 * 
+		 * */
+		PriorityQueue<String> minHeap = new PriorityQueue<>(
+				(a,b) -> {
+					if(a.length() != b.length()){
+						return Integer.compare(a.length(), b.length());
+					}
+					return a.compareTo(b);
+				}
+				);
+		for(String str : nums){
+			minHeap.add(str);
+			if(minHeap.size() > k){
+				minHeap.poll();
+			}
+		}
+		return minHeap.peek();
+	}
 }
