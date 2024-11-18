@@ -123,4 +123,44 @@ public class kthLargestSmallest {
 		}
 		return minHeap.peek();
 	}
+
+	public int[][] kClosest(int[][] points, int k) {
+		/*
+		 * Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane and an integer k, 
+		 * return the k closest points to the origin (0, 0).
+		 * The distance between two points on the X-Y plane is the Euclidean distance (i.e., √(x1 - x2)2 + (y1 - y2)2).
+		 * You may return the answer in any order. The answer is guaranteed to be unique (except for the order that it is in).
+		 * 
+		 * Solution : we need to find distance of each point from origin.
+		 * distance squared of two points = (x2-x1) + (y2-y1);
+		 * 
+		 * for each point using max heap (maximum distance at top), remove all those after k from heap.
+		 * 
+		 * */
+		PriorityQueue<Map.Entry<Integer, Integer>> maxHeap = new PriorityQueue<>(
+				(a,b) -> b.getValue()-a.getValue()
+				);
+
+		HashMap<Integer, Integer> distances = new HashMap<>();
+		int totalPoints = points.length;
+		for(int point=0; point<totalPoints; point++){
+			int distSqrd = points[point][0]*points[point][0] + points[point][1]*points[point][1];
+			distances.put(point, distSqrd);
+		}
+		for(Map.Entry<Integer, Integer> dist : distances.entrySet()){
+			maxHeap.add(dist);
+			if(maxHeap.size() > k){
+				maxHeap.poll();
+			}
+		}
+		int[][] result = new int[maxHeap.size()][2];
+		int currIndex = 0;
+		while(maxHeap.size() > 0){
+			Map.Entry<Integer, Integer> distance = maxHeap.poll();
+			result[currIndex][0] = points[distance.getKey()][0];
+			result[currIndex][1] = points[distance.getKey()][1];
+			currIndex++;
+		}
+		return result;
+	}
 }
