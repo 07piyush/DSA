@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
+import java.util.TreeMap;
 
 public class kthLargestSmallest {
 	/*
@@ -134,7 +135,7 @@ public class kthLargestSmallest {
 		 * Solution : we need to find distance of each point from origin.
 		 * distance squared of two points = (x2-x1) + (y2-y1);
 		 * 
-		 * for each point using max heap (maximum distance at top), remove all those after k from heap.
+		 * for each point using max heap (maximum distance at top), remove all those after comes after k.
 		 * 
 		 * */
 		PriorityQueue<Map.Entry<Integer, Integer>> maxHeap = new PriorityQueue<>(
@@ -163,4 +164,44 @@ public class kthLargestSmallest {
 		}
 		return result;
 	}
+	
+	 public boolean isPossibleDivide(int[] nums, int k) {
+		 /*
+		  * This solution is not heap based.
+		  * 
+		  * Given an array of integers nums and a positive integer k, check whether it is possible to divide this array 
+		  * into sets of k consecutive numbers. Return true if it is possible. Otherwise, return false.
+		  * 
+		  * Input: nums = [1,2,3,3,4,4,5,6], k = 4 Output: true
+		  * Explanation: Array can be divided into [1,2,3,4] and [3,4,5,6].
+		  * 
+		  * using a ordered map which is treeMap, we can keep track of sorted nums along with their frequency.
+		  * for each unique num in freqmap, from small to large there must exist 
+		  * same frequency of nums+1, nums+2...nums+k.
+		  * 
+		  * return false if not.
+		  * 
+		  * */
+	        Map<Integer, Integer> freq = new TreeMap<>();
+
+	        for(int i=0; i<nums.length; i++)
+	            freq.put(nums[i], freq.getOrDefault(nums[i], 0)+1);
+
+	        for(int num : freq.keySet()){
+	            int count = freq.get(num);
+	            if(count > 0){
+	                
+	                for(int partOfSubset = num+1; partOfSubset < num + k; partOfSubset++){
+	                    if(freq.containsKey(partOfSubset) && 
+	                        freq.get(partOfSubset) >= count){
+	                            int currFreq = freq.get(partOfSubset);
+	                            freq.put(partOfSubset, currFreq-count);
+	                        }
+	                        else
+	                            return false;
+	                }
+	            }
+	        }
+	        return true;
+	    }
 }
