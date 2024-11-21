@@ -165,7 +165,7 @@ public class kthLargestSmallest {
 		return result;
 	}
 	
-	 public boolean isPossibleDivide(int[] nums, int k) {
+	 public static boolean isPossibleDivide(int[] nums, int k) {
 		 /*
 		  * This solution is not heap based.
 		  * 
