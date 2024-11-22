@@ -164,44 +164,107 @@ public class kthLargestSmallest {
 		}
 		return result;
 	}
-	
-	 public static boolean isPossibleDivide(int[] nums, int k) {
-		 /*
-		  * This solution is not heap based.
-		  * 
-		  * Given an array of integers nums and a positive integer k, check whether it is possible to divide this array 
-		  * into sets of k consecutive numbers. Return true if it is possible. Otherwise, return false.
-		  * 
-		  * Input: nums = [1,2,3,3,4,4,5,6], k = 4 Output: true
-		  * Explanation: Array can be divided into [1,2,3,4] and [3,4,5,6].
-		  * 
-		  * using a ordered map which is treeMap, we can keep track of sorted nums along with their frequency.
-		  * for each unique num in freqmap, from small to large there must exist 
-		  * same frequency of nums+1, nums+2...nums+k.
-		  * 
-		  * return false if not.
-		  * 
-		  * */
-	        Map<Integer, Integer> freq = new TreeMap<>();
 
-	        for(int i=0; i<nums.length; i++)
-	            freq.put(nums[i], freq.getOrDefault(nums[i], 0)+1);
+	public static boolean isPossibleDivide(int[] nums, int k) {
+		/*
+		 * This solution is not heap based.
+		 * 
+		 * Given an array of integers nums and a positive integer k, check whether it is possible to divide this array 
+		 * into sets of k consecutive numbers. Return true if it is possible. Otherwise, return false.
+		 * 
+		 * Input: nums = [1,2,3,3,4,4,5,6], k = 4 Output: true
+		 * Explanation: Array can be divided into [1,2,3,4] and [3,4,5,6].
+		 * 
+		 * using a ordered map which is treeMap, we can keep track of sorted nums along with their frequency.
+		 * for each unique num in freqmap, from small to large there must exist 
+		 * same frequency of nums+1, nums+2...nums+k.
+		 * 
+		 * return false if not.
+		 * 
+		 * */
+		Map<Integer, Integer> freq = new TreeMap<>();
 
-	        for(int num : freq.keySet()){
-	            int count = freq.get(num);
-	            if(count > 0){
-	                
-	                for(int partOfSubset = num+1; partOfSubset < num + k; partOfSubset++){
-	                    if(freq.containsKey(partOfSubset) && 
-	                        freq.get(partOfSubset) >= count){
-	                            int currFreq = freq.get(partOfSubset);
-	                            freq.put(partOfSubset, currFreq-count);
-	                        }
-	                        else
-	                            return false;
-	                }
-	            }
-	        }
-	        return true;
-	    }
+		for(int i=0; i<nums.length; i++)
+			freq.put(nums[i], freq.getOrDefault(nums[i], 0)+1);
+
+		for(int num : freq.keySet()){
+			int count = freq.get(num);
+			if(count > 0){
+
+				for(int partOfSubset = num+1; partOfSubset < num + k; partOfSubset++){
+					if(freq.containsKey(partOfSubset) && 
+							freq.get(partOfSubset) >= count){
+						int currFreq = freq.get(partOfSubset);
+						freq.put(partOfSubset, currFreq-count);
+					}
+					else
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public ListNode mergeKLists(ListNode[] lists) {
+
+		/*
+		 * You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+		 * Merge all the linked-lists into one sorted linked-list and return it.
+		 * 
+		 * brute force : create a new head for result, and last node pointer curr, iterate on all elements of list.
+		 * each element is head of a linked list, iterate on complete list, while adding the node at curr.
+		 * this way we have appended all lists, now sort the resultant list.
+		 * 
+		 *  Time = O(n + nlogn) Space = O(1)
+		 *  
+		 *  problem : we are utilizing the information that lists are already sorted, so when we sort the final list
+		 *  we are again sorting those elements that were already sorted.
+		 *
+		 * so idea is to use this info, when we get head of each list, and save them in a minheap then its assured that
+		 * head with least value will be at top. now since all the lists are sorted, that means :
+		 * 1. the head given by minheap top is first value of final sorted list, 
+		 * 2. head at top of minheap will always give next node.
+		 * 
+		 * and when head.next is again put in heap, then heap will place that new head at its appropriate place.
+		 * 
+		 * while doing this we need to pop the minimum and use a new listnode to use as result.
+		 * 
+		 * 
+		 * */
+
+		if(lists == null || lists.length == 0) {
+			return null;
+		}
+		PriorityQueue<ListNode> minheap = new PriorityQueue<>(
+				(a,b) -> Integer.compare(a.val, b.val)
+				);
+
+		for(ListNode head : lists){
+			if(head != null)
+				minheap.add(head);
+		}
+
+		//among all the lists since they are sorted, min heap will have smallest one at top.
+		ListNode dummy = new ListNode(-1);
+		ListNode curr = dummy;
+
+		while(minheap.size() > 0){
+			ListNode smallest = minheap.poll();
+			curr.next = smallest;
+			curr = curr.next;
+			if(smallest.next != null){
+				minheap.add(smallest.next);
+			}
+		}
+
+		return dummy.next;
+	}
+
+	public class ListNode {
+		int val;
+		ListNode next;
+		ListNode() {}
+		ListNode(int val) { this.val = val; }
+		ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+	}
 }
