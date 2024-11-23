@@ -41,4 +41,28 @@ public class Greedy {
         return res;
     }
 	
+	public int matchPlayersAndTrainers(int[] players, int[] trainers) {
+		/*
+		 * problem statement is different as above, but problem is same.
+		 * the difference in solution is we do not need to use result at all,
+		 * just return then current index of player/child because it is the
+		 * number of player/children satisfied after completion of loop.
+		 * 
+		 * */
+        Arrays.sort(players);
+        Arrays.sort(trainers);
+        int currPlayer = 0;
+        int currTrainer = 0;
+        while(currPlayer < players.length && currTrainer < trainers.length){
+            if(players[currPlayer] <= trainers[currTrainer]){
+                currPlayer++;
+                currTrainer++;
+            }
+            else{
+                currTrainer++;
+            }
+        }
+        return currPlayer;
+    }
+	
 }
