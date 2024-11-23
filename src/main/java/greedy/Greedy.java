@@ -1,6 +1,8 @@
 package greedy;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Greedy {
 
@@ -41,13 +43,15 @@ public class Greedy {
         return res;
     }
 	
-	public int matchPlayersAndTrainers(int[] players, int[] trainers) {
+	public static int matchPlayersAndTrainers(int[] players, int[] trainers) {
 		/*
 		 * problem statement is different as above, but problem is same.
 		 * the difference in solution is we do not need to use result at all,
 		 * just return then current index of player/child because it is the
 		 * number of player/children satisfied after completion of loop.
 		 * 
+		 * 70398833330
+		 *  
 		 * */
         Arrays.sort(players);
         Arrays.sort(trainers);
@@ -63,6 +67,50 @@ public class Greedy {
             }
         }
         return currPlayer;
+    }
+	
+	public class Item{
+        Integer value;
+        Integer weight;
+        double perunitVal;
+        
+        public Item(Integer v, Integer w, double puv){
+            value = v;
+            weight = w;
+            perunitVal = puv;
+        }
+    }
+    public double fractionalKnapsack(List<Integer> val, List<Integer> wt, int capacity) {
+        // code here
+        List<Item> items = new ArrayList<>();
+        
+        for(int item = 0; item < val.size(); item++){
+            double perunitVal = (double) val.get(item)/wt.get(item);
+            Item newItem = new Item(val.get(item), wt.get(item), perunitVal);
+            items.add(newItem);
+        }
+        
+        items.sort(
+            (a,b) -> Double.compare(b.perunitVal, a.perunitVal)
+            );
+        
+        double res = 0.0;
+        
+        for(Item item : items){
+            if(capacity == 0)
+                break;
+
+            if(item.weight <= capacity){
+                res+=item.value;
+                capacity-=item.weight;
+            }
+            else{
+                double fractionalValue = item.perunitVal * capacity;
+                res += fractionalValue;
+                capacity = 0;
+            }
+        }
+        return res;
     }
 	
 }
