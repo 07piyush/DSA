@@ -112,5 +112,57 @@ public class Greedy {
         }
         return res;
     }
-	
+    
+    public int coinChangeBruteForce(int[] coins, int amount) {
+    	/*You are given an integer array coins representing coins of different denominations and an integer amount 
+    	 * representing a total amount of money.Return the fewest number of coins that you need to make up that amount. 
+    	 * If that amount of money cannot be made up by any combination of the coins, return -1. You may assume 
+    	 * that you have an infinite number of each kind of coin.
+    	 * 
+    	 * brute force : try all valid combinations.
+    	 * for each coin we can either select it or reject it, based on amount. 
+    	 * 1. if amount is zero then we don't need to check more coins. 
+    	 * 		: minimum number of coins = 0;
+    	 * 2. if amount is less than 0 then its not possible to use any coin to make a total of amount.
+    	 * 		: minimum number of coins = -1;
+    	 * 3. if amount is greater than 0 then for each coin, find the minimum number of coin when current coin is
+    	 * 		eligible to pick. that means, amount get reduced by current coin value.
+    	 * 		: minimum number of coins = 1 + minCoin(amount-coin)
+    	 * 4. in the end, if there is no coin that can give a sum of amount, then minCoins remain intmax.
+    	 * 
+    	 * Time = O(k^n) : k = number of coin denominations.
+    	 * 
+    	 * */
+    	if(amount == 0)
+    		return 0;
+    	if(amount < 0)
+    		return -1;
+    	
+    	int minCoins = Integer.MAX_VALUE;
+    	for(int coin : coins) {
+    		int minCoinsWithCurrentSelection = coinChangeBruteForce(coins, amount-coin);
+    		if(minCoinsWithCurrentSelection != -1) {
+    			//with current coin, it is possible to sum amount. so min coins is this + whatever returned 
+    			//when amount is reduced due to current coin selection.
+    			minCoins = Math.min(minCoinsWithCurrentSelection + 1, minCoins);
+    		}
+    	}
+    	return minCoins == Integer.MAX_VALUE ? -1 : minCoins;
+    }
+    
+    public int coinChangeGreedy(int[] coins, int amount) {
+    	/*
+    	 * Idea is to minimize number of coins required by greedily selecting the coin with highest denomination.
+    	 * this looks intuitive because common sense states that to have minimum coins for an amount, we should have
+    	 * coins of maximum possible value.
+    	 * 
+    	 * this approach fails because we are not considering send best options. 
+    	 * E.g coins = [1, 5, 6, 9] and amount = 11
+    	 * 
+    	 * greedy answer : [9 ,1, 1] = 3 coins
+    	 * correct answer: [5,6] = 2 coins.
+    	 * 
+    	 * */
+    	return 0;
+    }
 }
