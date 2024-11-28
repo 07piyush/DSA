@@ -246,4 +246,48 @@ public class Greedy {
 		int start;
 		int end;
 	}
+	
+	public boolean canJump(int[] nums) {
+		/*
+		 * You are given an integer array nums. You are initially positioned at the array's first index, 
+		 * and each element in the array represents your maximum jump length at that position.
+		 * 
+		 * Return true if you can reach the last index, or false otherwise.
+		 * 
+		 * Input: nums = [2,3,1,1,4] 
+		 * Output: true
+		 * Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
+		 * 
+		 * Brute force : at each step, try every possible jump till maximum.
+		 * this is possible by recursively calling canJump for each jump size in [max, 1]
+		 * Time = O(n!)
+		 * 
+		 * Optimal : to not able to reach end, the jump size must be 0.
+		 * otherwise in all other cases, its not possible to not reach till end.
+		 * 
+		 * idea is to avoid reaching a position where jump size is 0.
+		 * 
+		 * while traversing array, we know that at what position we can at max reach, in this way for each possible 
+		 * landing zones we can know maximum to maximum where we can reach if we jump from that landing zone.
+		 * 
+		 * but also if we know this maximum possible value of reachable landing zone, and no previous landing zone
+		 * promise to reach current landing zone then we must return false.
+		 * else keep traversing till either end or maximum possible reachable landing zone is equal or more than
+		 * size of array.
+		 * 
+		 * */
+        int maxDestination = 0; 
+        for(int i=0; i<nums.length; i++){
+            if(maxDestination >= nums.length){
+                return true;
+            }
+            if(i > maxDestination){
+                return false;
+            }
+            else{
+                maxDestination = maxDestination>nums[i]+i?maxDestination:nums[i]+i;
+            }
+        }
+        return true;
+    }
 }
