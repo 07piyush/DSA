@@ -1,5 +1,6 @@
 package piyush;
 
+import greedy.Greedy;
 import heaps.kthLargestSmallest;	
 
 public class MyPractice {
@@ -13,7 +14,11 @@ public class MyPractice {
 		//intervals[[1,3],[2,6],[8,10],[15,18]];
 		int [] a = {44,22,33,11,1};
 
-		kthLargestSmallest.isPossibleDivide(longestConsicutiveSequence, 3);
+		int[] start = {1, 3, 0, 5, 8, 5};
+		int[] end = {2, 4, 6, 7, 9, 9};
+		
+		Greedy gr = new Greedy();
+		gr.maxMeetings(start, end);
 
 
 	}

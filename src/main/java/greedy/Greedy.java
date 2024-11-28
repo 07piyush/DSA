@@ -225,6 +225,7 @@ public class Greedy {
 			Meeting m = new Meeting();
 			m.start = start[meeting];
 			m.end = end[meeting];
+			meetings.add(m);
 		}
 		meetings.sort(
 				(a, b) -> Integer.compare(a.end, b.end)
