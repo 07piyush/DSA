@@ -290,4 +290,37 @@ public class Greedy {
         }
         return true;
     }
+	
+	public int jump(int[] nums) {
+		
+		/*
+		 * You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+		 * Each element nums[i] represents the maximum length of a forward jump from index i. In other words, 
+		 * if you are at nums[i], you can jump to any nums[i + j] where:
+		 * 
+		 * 0 <= j <= nums[i] and
+		 * i + j < n
+		 * 
+		 * Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can 
+		 * reach nums[n - 1].
+		 * 
+		 * */
+        int curr =0;
+        int min = 0;
+        while(curr < nums.length){
+            int possibleLandings = nums[curr];
+            int indexOfNext = getMax(nums, curr+1, curr+possibleLandings);
+            curr+=indexOfNext;
+            min++;
+        }
+        return min;
+    }
+    private int getMax(int[] nums, int from, int to){
+        int max = from;
+        for(int i=from+1; i<=to; i++){
+            if(nums[i] > nums[max])
+                max = i;
+        }
+        return max;
+    }
 }
