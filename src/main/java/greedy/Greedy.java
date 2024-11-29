@@ -304,23 +304,37 @@ public class Greedy {
 		 * Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can 
 		 * reach nums[n - 1].
 		 * 
+		 * Brute force : recursively try all possibilities. 
+		 * 
+		 * Optimal : for each jump point(element of array), we need to have track of minimum number of jumps
+		 * that could have allowed to reach current jump point. like for 0th jump point minimum jumps = 0;
+		 * each jump point will give a range of points, that can be reached.
+		 * 
+		 * Idea is to keep iterating till second last jump point and any jump point may help reach farther than 
+		 * probably any next jump point.
+		 * keeping track of maximumReachable (for all jump points visited yet the farthest point that can be reached)
+		 * 				and	currReachable (reachable points from current jump point)
+		 * 
+		 * a new jump is required when current iteration is at point which is maximum currently reachable.
+		 * once jumped.  
+		 * 
+		 * confusion : why currReach is required at all.??
+		 * 			   why a jump is registered when i reaches currReach??
 		 * */
-        int curr =0;
-        int min = 0;
-        while(curr < nums.length){
-            int possibleLandings = nums[curr];
-            int indexOfNext = getMax(nums, curr+1, curr+possibleLandings);
-            curr+=indexOfNext;
-            min++;
-        }
-        return min;
-    }
-    private int getMax(int[] nums, int from, int to){
-        int max = from;
-        for(int i=from+1; i<=to; i++){
-            if(nums[i] > nums[max])
-                max = i;
-        }
-        return max;
+		int currReach = 0;
+		int maxReach = 0;
+		int jumps = 0;
+		for(int i=0; i<nums.length-1; i++) {
+			int currentPossible = i+nums[i];
+			maxReach = currentPossible>maxReach?currentPossible:maxReach;
+			
+			if(i == currReach) {
+				currReach = maxReach;
+				jumps++;
+				if(currReach>=nums.length-1)
+					break;
+			}
+		}
+        return jumps;
     }
 }
