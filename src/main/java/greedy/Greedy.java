@@ -354,28 +354,27 @@ public class Greedy {
 		 * 
 		 * Brute Force : for each incoming train find if there is anyoverlapping time, increase platforms if yes.
 		 * 
-		 * TODO : complete function as per coding standards.
 		 * 
 		 * */
 		
-        int ar = 0;
-        int dp = 0;
-        int max = 0;
-        int plat = 0;
+        int arrivalTime = 0;
+        int departureTime = 0;
+        int maxPlatforms = 0;
+        int platformCount = 0;
         Arrays.sort(arr);
         Arrays.sort(dep);
-        while(ar<arr.length && dp<dep.length){
+        while(arrivalTime<arr.length && departureTime<dep.length){
             
-            if(arr[ar] <= dep[dp]){
-                ar++;
-                plat++;
-                max = max>plat?max:plat;
+            if(arr[arrivalTime] <= dep[departureTime]){
+                arrivalTime++;
+                platformCount++;
+                maxPlatforms = maxPlatforms>platformCount?maxPlatforms:platformCount;
             }
             else{
-                dp++;
-                plat--;
+                departureTime++;
+                platformCount--;
             }
         }
-        return max;
+        return maxPlatforms;
     }
 }
