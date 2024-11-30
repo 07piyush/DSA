@@ -2,6 +2,7 @@ package greedy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class Greedy {
@@ -366,7 +367,7 @@ public class Greedy {
         while(arrivalTime<arr.length && departureTime<dep.length){
             
             if(arr[arrivalTime] <= dep[departureTime]){
-                arrivalTime++;
+            	arrivalTime++;
                 platformCount++;
                 maxPlatforms = maxPlatforms>platformCount?maxPlatforms:platformCount;
             }
@@ -377,4 +378,66 @@ public class Greedy {
         }
         return maxPlatforms;
     }
+	
+	ArrayList<Integer> JobScheduling(Job jobs[], int n) {
+		/*
+		 * Given an array, jobs[] where each job[i] has a jobid, deadline and profit associated with it. 
+		 * Each job takes 1 unit of time to complete and only one job can be scheduled at a time. We earn the profit 
+		 * associated with a job if and only if the job is completed by its deadline.
+		 * 
+		 * Find the number of jobs done and the maximum profit.
+		 * 
+		 * Note: jobs will be given in the form (jobid, deadline, profit) associated with that job. 
+		 * Deadline of the job is the time on or before which job needs to be completed to earn the profit.
+		 * 
+		 * Greedy : sort the jobs by profit, for each job we need to know when in the days from 1 to deadline of
+		 * current job (sorted by profit) can we execute it or not execute it.
+		 * 
+		 * Time : O( NlogN + N*maxDeadline)
+		 * Space : O(maxDeadline)
+		 * 
+		 * This is the most optimal greedy solution.
+		 * 
+		 * */
+        
+        Arrays.sort(jobs, (a, b) -> Integer.compare(b.profit, a.profit));
+        
+        int count = 0;
+        int profit = 0;
+        int maxDeadline = 0;
+        for(int i=0; i<jobs.length; i++){
+            Job job = jobs[i];
+            maxDeadline = maxDeadline>job.deadline?maxDeadline:job.deadline;
+        }
+        
+        int[] arr = new int[maxDeadline];
+        for(int i=0; i<jobs.length; i++){
+            Job job = jobs[i];
+            int day = job.deadline-1;
+            while(day>=0){
+                if(arr[day] == 0){
+                    arr[day] = job.profit;
+                    count++;
+                    day--;
+                    profit+=job.profit;
+                    break;
+                }
+            }
+            
+        }
+        
+        ArrayList<Integer> res = new ArrayList<>(2);
+        res.add(count);
+        res.add(profit);
+        return res;
+    }
+	
+	class Job {
+	    int id, profit, deadline;
+	    Job(int x, int y, int z){
+	        this.id = x;
+	        this.deadline = y;
+	        this.profit = z;
+	    }
+	}
 }
