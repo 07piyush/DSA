@@ -440,4 +440,57 @@ public class Greedy {
 	        this.profit = z;
 	    }
 	}
+	
+	public int[][] insert(int[][] intervals, int[] newInterval) {
+		
+		/*
+		 * Leetcode : 57. Insert Interval
+		 * 
+		 * Example 1:
+		 * Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
+		 * Output: [[1,5],[6,9]]
+		 * 
+		 * Example 2:
+		 * Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+		 * Output: [[1,2],[3,10],[12,16]]
+		 * Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
+		 * 
+		 * Solution : while traversing intervals, we need to find first interval that overlaps
+		 * with newInterval. Untill overlapping interval is found, we can insert the interval in result
+		 * when found the interval that contains start of newInterval we can keep iterating and choose 
+		 * the range as minimum(newInterval.start, currInterval.start) and choose maximum(newInterval.end, curr.end)
+		 * untill newInterval is in overlapping range of curr intervals. 
+		 * 
+		 * in the end, for remaining intervals we can directly push them in result.
+		 * 
+		 * Time = O(n)
+		 * Space = O(1)
+		 * 
+		 * 
+		 * */
+        int currInterval = 0;
+        List<int[]> result = new ArrayList<>();
+
+        while(currInterval < intervals.length && intervals[currInterval][1] < newInterval[0]){
+            int[] interval = {intervals[currInterval][0], intervals[currInterval][1]};
+            result.add(interval);
+            currInterval++;
+        }
+        
+        while(currInterval < intervals.length && intervals[currInterval][0] <= newInterval[1]){
+            newInterval[0] = intervals[currInterval][0] < newInterval[0]?intervals[currInterval][0]:newInterval[0];
+            newInterval[1] = intervals[currInterval][1] > newInterval[1]?intervals[currInterval][1]:newInterval[1];
+            currInterval++;
+        }
+
+        result.add(newInterval);
+
+        while(currInterval < intervals.length ){
+            int[] interval = {intervals[currInterval][0], intervals[currInterval][1]};
+            result.add(interval);
+            currInterval++;
+        }
+
+        return result.toArray(new int[0][]);
+    }
 }
