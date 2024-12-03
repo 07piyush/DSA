@@ -2,7 +2,6 @@ package greedy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class Greedy {
@@ -247,7 +246,7 @@ public class Greedy {
 		int start;
 		int end;
 	}
-	
+
 	public boolean canJump(int[] nums) {
 		/*
 		 * You are given an integer array nums. You are initially positioned at the array's first index, 
@@ -277,23 +276,23 @@ public class Greedy {
 		 * size of array.
 		 * 
 		 * */
-        int maxDestination = 0; 
-        for(int i=0; i<nums.length; i++){
-            if(maxDestination >= nums.length){
-                return true;
-            }
-            if(i > maxDestination){
-                return false;
-            }
-            else{
-                maxDestination = maxDestination>nums[i]+i?maxDestination:nums[i]+i;
-            }
-        }
-        return true;
-    }
-	
+		int maxDestination = 0; 
+		for(int i=0; i<nums.length; i++){
+			if(maxDestination >= nums.length){
+				return true;
+			}
+			if(i > maxDestination){
+				return false;
+			}
+			else{
+				maxDestination = maxDestination>nums[i]+i?maxDestination:nums[i]+i;
+			}
+		}
+		return true;
+	}
+
 	public int jump(int[] nums) {
-		
+
 		/*
 		 * You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
 		 * Each element nums[i] represents the maximum length of a forward jump from index i. In other words, 
@@ -328,7 +327,7 @@ public class Greedy {
 		for(int i=0; i<nums.length-1; i++) {
 			int currentPossible = i+nums[i];
 			maxReach = currentPossible>maxReach?currentPossible:maxReach;
-			
+
 			if(i == currReach) {
 				currReach = maxReach;
 				jumps++;
@@ -336,9 +335,9 @@ public class Greedy {
 					break;
 			}
 		}
-        return jumps;
-    }
-	
+		return jumps;
+	}
+
 	static int findPlatform(int arr[], int dep[]) {
 		/*
 		 * You are given the arrival times arr[] and departure times dep[] of all trains that arrive at a railway 
@@ -357,28 +356,28 @@ public class Greedy {
 		 * 
 		 * 
 		 * */
-		
-        int arrivalTime = 0;
-        int departureTime = 0;
-        int maxPlatforms = 0;
-        int platformCount = 0;
-        Arrays.sort(arr);
-        Arrays.sort(dep);
-        while(arrivalTime<arr.length && departureTime<dep.length){
-            
-            if(arr[arrivalTime] <= dep[departureTime]){
-            	arrivalTime++;
-                platformCount++;
-                maxPlatforms = maxPlatforms>platformCount?maxPlatforms:platformCount;
-            }
-            else{
-                departureTime++;
-                platformCount--;
-            }
-        }
-        return maxPlatforms;
-    }
-	
+
+		int arrivalTime = 0;
+		int departureTime = 0;
+		int maxPlatforms = 0;
+		int platformCount = 0;
+		Arrays.sort(arr);
+		Arrays.sort(dep);
+		while(arrivalTime<arr.length && departureTime<dep.length){
+
+			if(arr[arrivalTime] <= dep[departureTime]){
+				arrivalTime++;
+				platformCount++;
+				maxPlatforms = maxPlatforms>platformCount?maxPlatforms:platformCount;
+			}
+			else{
+				departureTime++;
+				platformCount--;
+			}
+		}
+		return maxPlatforms;
+	}
+
 	ArrayList<Integer> JobScheduling(Job jobs[], int n) {
 		/*
 		 * Given an array, jobs[] where each job[i] has a jobid, deadline and profit associated with it. 
@@ -399,50 +398,50 @@ public class Greedy {
 		 * This is the most optimal greedy solution.
 		 * 
 		 * */
-        
-        Arrays.sort(jobs, (a, b) -> Integer.compare(b.profit, a.profit));
-        
-        int count = 0;
-        int profit = 0;
-        int maxDeadline = 0;
-        for(int i=0; i<jobs.length; i++){
-            Job job = jobs[i];
-            maxDeadline = maxDeadline>job.deadline?maxDeadline:job.deadline;
-        }
-        
-        int[] arr = new int[maxDeadline];
-        for(int i=0; i<jobs.length; i++){
-            Job job = jobs[i];
-            int day = job.deadline-1;
-            while(day>=0){
-                if(arr[day] == 0){
-                    arr[day] = job.profit;
-                    count++;
-                    day--;
-                    profit+=job.profit;
-                    break;
-                }
-            }
-            
-        }
-        
-        ArrayList<Integer> res = new ArrayList<>(2);
-        res.add(count);
-        res.add(profit);
-        return res;
-    }
-	
-	class Job {
-	    int id, profit, deadline;
-	    Job(int x, int y, int z){
-	        this.id = x;
-	        this.deadline = y;
-	        this.profit = z;
-	    }
+
+		Arrays.sort(jobs, (a, b) -> Integer.compare(b.profit, a.profit));
+
+		int count = 0;
+		int profit = 0;
+		int maxDeadline = 0;
+		for(int i=0; i<jobs.length; i++){
+			Job job = jobs[i];
+			maxDeadline = maxDeadline>job.deadline?maxDeadline:job.deadline;
+		}
+
+		int[] arr = new int[maxDeadline];
+		for(int i=0; i<jobs.length; i++){
+			Job job = jobs[i];
+			int day = job.deadline-1;
+			while(day>=0){
+				if(arr[day] == 0){
+					arr[day] = job.profit;
+					count++;
+					day--;
+					profit+=job.profit;
+					break;
+				}
+			}
+
+		}
+
+		ArrayList<Integer> res = new ArrayList<>(2);
+		res.add(count);
+		res.add(profit);
+		return res;
 	}
-	
+
+	class Job {
+		int id, profit, deadline;
+		Job(int x, int y, int z){
+			this.id = x;
+			this.deadline = y;
+			this.profit = z;
+		}
+	}
+
 	public int[][] insert(int[][] intervals, int[] newInterval) {
-		
+
 		/*
 		 * Leetcode : 57. Insert Interval
 		 * 
@@ -466,31 +465,71 @@ public class Greedy {
 		 * Time = O(n)
 		 * Space = O(1)
 		 * 
+		 * */
+		int currInterval = 0;
+		List<int[]> result = new ArrayList<>();
+
+		while(currInterval < intervals.length && intervals[currInterval][1] < newInterval[0]){
+			int[] interval = {intervals[currInterval][0], intervals[currInterval][1]};
+			result.add(interval);
+			currInterval++;
+		}
+
+		while(currInterval < intervals.length && intervals[currInterval][0] <= newInterval[1]){
+			newInterval[0] = intervals[currInterval][0] < newInterval[0]?intervals[currInterval][0]:newInterval[0];
+			newInterval[1] = intervals[currInterval][1] > newInterval[1]?intervals[currInterval][1]:newInterval[1];
+			currInterval++;
+		}
+
+		result.add(newInterval);
+
+		while(currInterval < intervals.length ){
+			int[] interval = {intervals[currInterval][0], intervals[currInterval][1]};
+			result.add(interval);
+			currInterval++;
+		}
+
+		return result.toArray(new int[0][]);
+	}
+
+	public int eraseOverlapIntervals(int[][] intervals) {
+		
+		/*
+		 * Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of 
+		 * intervals you need to remove to make the rest of the intervals non-overlapping.
+		 * Note that intervals which only touch at a point are non-overlapping. For example, [1, 2] and [2, 3] 
+		 * are non-overlapping.
+		 * 
+		 * Input: intervals = [[1,2],[2,3],[3,4],[1,3]]
+		 * Output: 1
+		 * Explanation: [1,3] can be removed and the rest of the intervals are non-overlapping.
+		 * 
+		 * Hint : N meetings in one room problem. GFG.
+		 * 
+		 * Solution : To find minimum number of overlapping intervals to be removed, we can know maximum number of non-
+		 * overlapping intervals. To maximize non overlapping greedily means to select all those who have shortest 
+		 * range. i.e from [1,2], [3,4], [1,6] instead of removing 1,2 and 3,4 we should remove 1,6. in this way
+		 * we are selecting maximum number of non overlapping intervals.
+		 * 
+		 * now since start < end, we can sort the array by end time, in this way we know those intervals that ends
+		 * first must start first, hence will give shorter range. 
+		 * 
+		 * once we know total number of non overlapping intervals, 
+		 * 	overlapping intervals are = totalIntervals - totalOverlappingIntervals.
 		 * 
 		 * */
-        int currInterval = 0;
-        List<int[]> result = new ArrayList<>();
 
-        while(currInterval < intervals.length && intervals[currInterval][1] < newInterval[0]){
-            int[] interval = {intervals[currInterval][0], intervals[currInterval][1]};
-            result.add(interval);
-            currInterval++;
-        }
-        
-        while(currInterval < intervals.length && intervals[currInterval][0] <= newInterval[1]){
-            newInterval[0] = intervals[currInterval][0] < newInterval[0]?intervals[currInterval][0]:newInterval[0];
-            newInterval[1] = intervals[currInterval][1] > newInterval[1]?intervals[currInterval][1]:newInterval[1];
-            currInterval++;
-        }
+		Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));
 
-        result.add(newInterval);
-
-        while(currInterval < intervals.length ){
-            int[] interval = {intervals[currInterval][0], intervals[currInterval][1]};
-            result.add(interval);
-            currInterval++;
-        }
-
-        return result.toArray(new int[0][]);
-    }
+		int intervalCount = 0;
+		int nextAvailbleInterval = intervals[0][0];
+		int intervalSize = intervals.length;
+		for(int i=0; i<intervalSize; i++){
+			if(intervals[i][0] >= nextAvailbleInterval){
+				intervalCount++;
+				nextAvailbleInterval = intervals[i][1];
+			}
+		}
+		return intervalSize-intervalCount;
+	}
 }
