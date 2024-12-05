@@ -1,8 +1,45 @@
 package tree;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 public class BinaryTree {
 
 	int maximum = 0;
+	List<List<Integer>> levelOrderedTree;
+	Queue<TreeNode> que;
+	
+	public List<List<Integer>> levelOrder(TreeNode root) {
+		/*
+		 * Level Order Traversal.
+		 * 
+		 * */
+		levelOrderedTree = new ArrayList<>();
+		if(root == null)
+			return levelOrderedTree;
+		que = new LinkedList<>();
+		que.add(root);
+		getLevelOrder(root);
+		return levelOrderedTree;
+    }
+	
+	private void getLevelOrder(TreeNode root) {
+		while(que.size() > 0) {
+			ArrayList<Integer> list = new ArrayList<>();
+			int itemsAtCurrLevel = que.size();
+			for(int i=0; i<itemsAtCurrLevel; i++) {
+				TreeNode node = que.poll();
+				list.add(node.val);
+                if(null != node.left)
+    				que.add(node.left);
+                if(null != node.right)
+				    que.add(node.right);
+			}
+            levelOrderedTree.add(list);
+		}
+	}
 	
 	public int diameterOfBinaryTree(TreeNode root) {
 		/*
