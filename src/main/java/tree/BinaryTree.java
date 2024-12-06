@@ -73,25 +73,23 @@ public class BinaryTree {
     	que.addFirst(root);
     	
     	while(!que.isEmpty()) {
-    		List<Integer> elements = new ArrayList<>();
     		int count = que.size();
+            LinkedList<Integer> elements = new LinkedList<>();
     		for(int i=0; i<count; i++) {
     			TreeNode node = que.pollFirst();
-    			elements.add(node.val);
+    			if(reverse) {
+    				elements.addFirst(node.val);
+    			}
+    			else {
+        			elements.add(node.val);	
+    			}
     			if(node.left != null) que.addLast(node.left);
     			if(node.right != null) que.addLast(node.right);
     		}
-    		if(reverse) {
-    			Collections.reverse(elements);
-    			reverse = false;
-    		}
-    		else {
-    			reverse = true;
-    		}    			
+    		reverse=!reverse;
+    		
     		res.add(elements);
     	}
-    	
-    	
     	return res;
     }
 }
