@@ -3,9 +3,14 @@ package tree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class BinaryTree {
 
@@ -65,6 +70,12 @@ public class BinaryTree {
     }
     
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    	
+    	/*
+    	 * the list values of individual level should have the order as per requirement.
+    	 * either reverse it later or take care of the order at the time of insertion.
+    	 * 
+    	 * */
     	List<List<Integer>> res = new ArrayList<>();
     	Deque<TreeNode> que = new LinkedList<>();
     	boolean reverse = false;
@@ -91,5 +102,76 @@ public class BinaryTree {
     		res.add(elements);
     	}
     	return res;
+    }
+    Map<Integer, List<Integer>> register = new TreeMap<>();
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+    	
+    	//incorrect implementation.
+    	//need to do level order traversal.
+    	
+        List<List<Integer>> res = new ArrayList<>();
+        if(root == null)
+            return res;
+        vT(root, 0);
+        for(Map.Entry<Integer, List<Integer>> entry : register.entrySet()){
+            res.add(entry.getValue());
+        }
+        
+        return res;
+    }
+    
+    private void vT(TreeNode root, int vlevel) {
+    	if(root == null)
+    		return;
+    	List<Integer> list = register.getOrDefault(vlevel, new LinkedList<>());
+    	list.add(root.val);
+    	vT(root.left, vlevel-1);
+    	vT(root.right, vlevel+1);
+    }
+    
+    class Pair{
+        public TreeNode node;
+        public Integer vid;
+        
+        Pair(TreeNode n, Integer i){
+            node = n;
+            vid = i;
+        }
+    }
+    public ArrayList<Integer> topView(TreeNode root) {
+    	/*
+    	 * Solution : traverse tree by level.
+    	 * for each level, we only need to keep first item of a vertical level.
+    	 * 
+    	 * using an ordered map, to keep item at each vertical level.
+    	 * we can reject an item from storing in result, if it already exist.
+    	 * 
+    	 * Time = O(n)
+    	 * Space = O(n)
+    	 * 
+    	 * */
+    	
+        ArrayList<Integer> res = new ArrayList<>();        
+        if(root != null)
+            return res;
+        
+        Deque<Pair> dq = new LinkedList<>();
+        Map<Integer, Integer> register = new TreeMap<>();
+        
+        dq.addLast(new Pair(root, 0));
+        while(!dq.isEmpty()){
+        	
+            Pair p = dq.pollFirst();
+            if(!register.containsKey(p.vid)){
+                register.put(p.vid, p.node.val);
+            }
+            
+            if(p.node.left != null) dq.addLast(new Pair(p.node.left, p.vid-1));
+            if(p.node.right != null) dq.addLast(new Pair(p.node.right, p.vid+1));
+        }
+        for(Map.Entry<Integer, Integer> entry : register.entrySet()){
+            res.add(entry.getValue());
+        }
+        return res;
     }
 }
