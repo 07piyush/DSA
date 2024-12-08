@@ -239,4 +239,47 @@ public class BinaryTree {
 			this.vid = vid;
 		}
 	}
+	
+
+	public ArrayList <Integer> bottomView(TreeNode root)
+	{
+		/*
+		 * Given a binary tree, return an array where elements represent the bottom view of the binary tree from 
+		 * left to right.
+		 * 
+		 * Conclusions from Problem statement :
+		 * 1. returned values in order of nodes from left to right (vertical distance).
+		 * 2. returned values would have only values that occur latest from top to bottom.
+		 * 3. two nodes may belong to same vertical distance, keep only the later one.
+		 * 
+		 * tree map will automatically keep the vertical order of vertical distances.
+		 * 
+		 * since we are iterating form top to bottom in terms of horizontal distance, i.e 0, 1, 2....
+		 * hence we can simply replace items while traversing top to bottom, to only keep latest (node that will hide
+		 * node just above it horizontally).
+		 * 
+		 * if two nodes belong to same vertical distance, we only need to keep the one that comes later.
+		 * hence just replacing value at any vertical distance will automatically follow required conditions.
+		 * 
+		 * */
+		ArrayList<Integer> result = new ArrayList<>();
+		if(root == null)
+			return result;
+
+		Map<Integer, Integer> register = new TreeMap<>();
+		Deque<Pair> dq = new LinkedList<>();
+
+		dq.add(new Pair(root, 0));
+		while(!dq.isEmpty()){
+			Pair p = dq.pollFirst();
+			register.put(p.vid, p.node.val);
+			if(null != p.node.left) dq.addLast(new Pair(p.node.left, p.vid-1));
+			if(null != p.node.right) dq.addLast(new Pair(p.node.right, p.vid+1));
+		}
+		for(int value : register.values()){
+			result.add(value);
+		}
+
+		return result;
+	}
 }
