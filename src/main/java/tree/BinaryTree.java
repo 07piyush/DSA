@@ -217,12 +217,12 @@ public class BinaryTree {
 		while(!dq.isEmpty()){
 
 			Pair p = dq.pollFirst();
-			if(!register.containsKey(p.vid)){
-				register.put(p.vid, p.node.val);
+			if(!register.containsKey(p.distance)){
+				register.put(p.distance, p.node.val);
 			}
 
-			if(p.node.left != null) dq.addLast(new Pair(p.node.left, p.vid-1));
-			if(p.node.right != null) dq.addLast(new Pair(p.node.right, p.vid+1));
+			if(p.node.left != null) dq.addLast(new Pair(p.node.left, p.distance-1));
+			if(p.node.right != null) dq.addLast(new Pair(p.node.right, p.distance+1));
 		}
 		for(Map.Entry<Integer, Integer> entry : register.entrySet()){
 			res.add(entry.getValue());
@@ -232,11 +232,11 @@ public class BinaryTree {
 
 	class Pair{
 		public TreeNode node;
-		public int vid;
+		public int distance;
 
 		public Pair(TreeNode node, int vid) {
 			this.node = node;
-			this.vid = vid;
+			this.distance = vid;
 		}
 	}
 	
@@ -272,9 +272,9 @@ public class BinaryTree {
 		dq.add(new Pair(root, 0));
 		while(!dq.isEmpty()){
 			Pair p = dq.pollFirst();
-			register.put(p.vid, p.node.val);
-			if(null != p.node.left) dq.addLast(new Pair(p.node.left, p.vid-1));
-			if(null != p.node.right) dq.addLast(new Pair(p.node.right, p.vid+1));
+			register.put(p.distance, p.node.val);
+			if(null != p.node.left) dq.addLast(new Pair(p.node.left, p.distance-1));
+			if(null != p.node.right) dq.addLast(new Pair(p.node.right, p.distance+1));
 		}
 		for(int value : register.values()){
 			result.add(value);
@@ -282,4 +282,35 @@ public class BinaryTree {
 
 		return result;
 	}
+	
+	public List<Integer> rightSideViewIterative(TreeNode root) {
+		/*
+		 * Given the root of a binary tree, imagine yourself standing on the right side of it, 
+		 * return the values of the nodes you can see ordered from top to bottom.
+		 * 
+		 * 1. Using Level order traversal.
+		 * 	
+		 * for a complete binary tree, at a particular time queue will store almost half of elements.
+		 * so space = O(n)
+		 * 		time= O(n)
+		 * 
+		 * */
+        List<Integer> res = new ArrayList<>();
+        if(root == null)
+            return res;
+        Deque<Pair> dq = new LinkedList<>();
+        Map<Integer, Integer> register = new TreeMap();
+        dq.add(new Pair(root, 0));
+        while(!dq.isEmpty()){
+            Pair p = dq.pollFirst();
+            register.put(p.distance, p.node.val);
+            if(null != p.node.left) dq.addLast(new Pair(p.node.left, p.distance+1));
+            if(null != p.node.right) dq.addLast(new Pair(p.node.right, p.distance+1));
+        }
+        for(Integer value : register.values()){
+            res.add(value);
+        }
+        return res;
+    }
+
 }
