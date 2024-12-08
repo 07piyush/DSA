@@ -313,4 +313,32 @@ public class BinaryTree {
         return res;
     }
 
+	public List<Integer> rightSideViewRecursive(TreeNode root) {
+		/*
+		 * using reverse Pre order traversal (Root, Right, left) 
+		 * this can be solved with less space complexity and better readability.
+		 * 
+		 * result will have exactly h elements, where h is height of tree.
+		 * hence idea is to put an element in result only first time, this can be achieved by 
+		 * size of result, and putting right most element first. if height h has been visited, then size
+		 * of result will be h. Since we want right view of tree, first visit right node of current node
+		 * recursively.
+		 * 
+		 * */
+        List<Integer> res = new ArrayList<>();
+        if(root == null)
+            return res;
+        res.add(root.val);
+        getRightView(root, 0, res);
+        return res;
+    }
+
+    private void getRightView(TreeNode node, int height, List<Integer> res){
+        if(node == null)
+            return;
+        if(height+1 > res.size())
+            res.add(node.val);
+        getRightView(node.right, height+1, res);
+        getRightView(node.left, height+1, res);
+    }
 }
