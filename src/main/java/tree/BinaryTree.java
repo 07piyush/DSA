@@ -334,11 +334,36 @@ public class BinaryTree {
     }
 
     private void getRightView(TreeNode node, int height, List<Integer> res){
+    	/*
+    	 * 
+    	 * */
         if(node == null)
             return;
         if(height+1 > res.size())
             res.add(node.val);
         getRightView(node.right, height+1, res);
         getRightView(node.left, height+1, res);
+    }
+    
+    public boolean isSymmetric(TreeNode root) {
+    	/*
+    	 * Idea : a node's left child will be equal to node's right child.
+    	 * i.e. RootLeftRight == RootRightLeft.
+    	 * 
+    	 * 
+    	 * */
+        if(root == null)
+            return true;
+        return isSymmetricHelper(root.left, root.right);
+    }
+
+    private boolean isSymmetricHelper(TreeNode leftRoot, TreeNode rightRoot){
+        if(leftRoot == null || rightRoot == null)
+            return leftRoot == rightRoot;
+        if(leftRoot.val != rightRoot.val)
+            return false;
+        
+        return (isSymmetricHelper(leftRoot.left, rightRoot.right) && isSymmetricHelper(leftRoot.right, rightRoot.left));
+
     }
 }
