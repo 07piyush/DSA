@@ -366,4 +366,45 @@ public class BinaryTree {
         return (isSymmetricHelper(leftRoot.left, rightRoot.right) && isSymmetricHelper(leftRoot.right, rightRoot.left));
 
     }
+    
+    class Node
+    {
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data)
+        {
+            this.data = data;
+            left = null;
+            right = null;
+        }
+    }
+    public static ArrayList<ArrayList<Integer>> Paths(Node root) {
+        // code here
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        if(root == null)
+            return res;
+        
+        ArrayList<Integer> cache = new ArrayList<>();
+        pathsHelper(root, res, cache);
+        return res;
+    }
+    
+    private static void pathsHelper(Node root, ArrayList<ArrayList<Integer>> res, ArrayList<Integer> cache){
+        if(root == null)
+            return;
+        
+        cache.add(root.data);
+        
+        if(root.left == null && root.right == null){
+            res.add(new ArrayList<Integer>(cache));
+        }    
+        else{
+            pathsHelper(root.left, res, cache);
+            pathsHelper(root.right, res, cache);
+        }    
+        
+        cache.remove(cache.size()-1);
+    }
 }
