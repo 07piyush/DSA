@@ -407,4 +407,35 @@ public class BinaryTree {
         
         cache.remove(cache.size()-1);
     }
+    
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    	/*
+    	 * Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+    	 * According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two 
+    	 * nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be 
+    	 * a descendant of itself).”
+    	 * 
+    	 * Brute force : while traversing tree, idea is to store each node in 2 linear data structures, array/stack
+    	 * until p and q is found. then traversing on linear structure to find last common node which will be
+    	 * their common ancestor.
+    	 * 
+    	 * Optimal : while traversing the tree, idea is to return the node if it is p or q. if from left and right
+    	 * null is not recieved that means from left and right we have found the targets. 
+    	 * 
+    	 * */
+        if(root == null)
+            return null;
+        if(root == p)
+            return p;
+        if(root == q)
+            return q;
+        TreeNode leftNode = lowestCommonAncestor(root.left, p, q);
+        TreeNode rightNode = lowestCommonAncestor(root.right, p, q);
+        if(leftNode != null && rightNode != null)
+            return root;
+        if(leftNode != null)
+            return leftNode;
+        
+        return rightNode;
+    }
 }
