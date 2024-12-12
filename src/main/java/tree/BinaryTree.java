@@ -438,4 +438,48 @@ public class BinaryTree {
         
         return rightNode;
     }
+    
+    public int widthOfBinaryTree(TreeNode root) {
+    	/*
+    	 * LeetCode - 662. Maximum Width of Binary Tree
+    	 * 
+    	 * bruteForce : for each level, assign an index to node. root being at index 0. every left child must be
+    	 * at index = rootIndex*2+1 and child at right will be rootIndex*2+2. in this way we have indexed the position
+    	 * of each node as if it is a flat array. now when this is completed, the left most index of last level of 
+    	 * tree and right most index of last level of tree will give us a range which is our answer. 
+    	 * 
+    	 * problem with above solution is, in case of skewed tree, when we calculate index of a node then after a while
+    	 * the index value will overflow size of int. Since we are only interested in a range of nodes at a level,
+    	 * optimal idea is to set the index of left and right such that it starts from 0.
+    	 * 
+    	 * Optimal : perform a level order traversal to visit nodes of each level, starting from root we need to
+    	 * keep node and its index in the queue. width will 1 for root, and index will be 0. 
+    	 * now while putting each node in the queue using index of first(left is minimum) put left and right in the que
+    	 * 
+    	 *  time = O(n)
+    	 *  space = O(n)
+    	 * 
+    	 * */
+        Deque<Pair> dq = new LinkedList<>();
+        int width = 1;
+        Pair p = new Pair(root, 0);
+        dq.add(p);
+        while(!dq.isEmpty()){
+            int size = dq.size();
+            int rightSize = 0;
+            int leftSize = 0;
+            for(int nodes=0; nodes<size; nodes++){
+                Pair currP = dq.pollFirst();
+                if(nodes == 0)
+                    rightSize = currP.distance;
+                leftSize = currP.distance;
+                if(currP.node.left != null) dq.addLast(new Pair(currP.node.left, (((currP.distance-rightSize)*2)+1)));
+                if(currP.node.right != null) dq.addLast(new Pair(currP.node.right, (((currP.distance-rightSize)*2)+2)));
+                int currWidth = leftSize-rightSize+1;
+                width = width>currWidth?width:currWidth;
+            }
+        }
+
+        return width;
+    }
 }
