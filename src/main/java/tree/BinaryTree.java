@@ -3,6 +3,8 @@ package tree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -481,5 +483,63 @@ public class BinaryTree {
         }
 
         return width;
+    }
+
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+    	/*
+    	 * 1. prepare node value to its parent map. this map will be used to find 
+    	 * 
+    	 * */
+        List<Integer> res = new ArrayList<>();
+        Deque<TreeNode> dq = new LinkedList<>();
+        Map<Integer, TreeNode> parentRegister = new HashMap<>();
+        if(root == null)
+        	return res;
+        dq.add(root);
+        while(!dq.isEmpty()) {
+        	TreeNode node = dq.pollFirst();
+        	if(node.left != null) {
+        		parentRegister.put(node.left.val, node);
+        		dq.addLast(node.left);
+        	}
+        	if(node.right != null) {
+        		parentRegister.put(node.right.val, node);
+        		dq.addLast(node.right);
+        	}
+        }
+        
+        //from target node with currDistance = 0, move outwards and put all neighbors in queue,
+        //to further move in tree. when currDistance reach k, stop traversing outward and just return items in queue.
+        
+        Set<TreeNode> visited = new HashSet<>();
+        dq.clear();
+        int currDistance = 0;
+        dq.add(target);
+        visited.add(target);
+        while(!dq.isEmpty()) {
+        	//1. for all the elements in current size, push all unvisited neighbors in queu also mark as visited
+        	int size = dq.size();
+        	if(currDistance == k) break;
+        	currDistance++;
+        	for(int i=0; i<size; i++) {
+        		TreeNode node = dq.pollFirst();
+        		if(null!=node.left && !visited.contains(node.left)) {
+        			dq.add(node.left);
+        			visited.add(node.left);
+        		}
+        		if(null!= node.right && !visited.contains(node.right)) {
+        			dq.add(node.right);
+        			visited.add(node.right);
+        		}
+        		if(!visited.contains(parentRegister.get(node.val))) {
+        			dq.add(parentRegister.get(node.val));
+        			visited.add(parentRegister.get(node.val));
+        		}
+        	}
+        }
+        while(!dq.isEmpty()) {
+        	res.add(dq.pollFirst().val);
+        }
+        return res;
     }
 }
