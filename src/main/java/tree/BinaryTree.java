@@ -531,7 +531,7 @@ public class BinaryTree {
         			dq.add(node.right);
         			visited.add(node.right);
         		}
-        		if(!visited.contains(parentRegister.get(node.val))) {
+        		if(null!=parentRegister.get(node.val) && !visited.contains(parentRegister.get(node.val))) {
         			dq.add(parentRegister.get(node.val));
         			visited.add(parentRegister.get(node.val));
         		}
@@ -541,5 +541,47 @@ public class BinaryTree {
         	res.add(dq.pollFirst().val);
         }
         return res;
+    }
+    
+    public int countNodes(TreeNode root) {
+    	/*
+    	 * Given the root of a complete binary tree, return the number of the nodes in the tree.
+    	 * Design an algorithm that runs in less than O(n) time complexity.
+    	 * 
+    	 * brute force : to traverse the tree in O(n) and count the number of nodes.
+    	 * 
+    	 * Optimal : since the tree is complete binary tree, hence if height of leftmost node of tree and height
+    	 * at which right most node exists is same then we can directly use formula to find total nodes in tree.
+    	 * 
+    	 * if heights are different, that means at last level nodes exists from left to right.
+    	 * idea is to find number of nodes in left tree and right tree recursively. 
+    	 * 
+    	 * */
+        if(root == null)
+            return 0;
+        int lh = heightLeft(root.left);
+        int rh = heightRight(root.right);
+        if(lh == rh)
+            return (int)Math.pow(2, rh+1)-1;
+        return 1 + countNodes(root.left) + countNodes(root.right);
+    }
+
+    private int heightLeft(TreeNode root){
+        TreeNode cur = root;
+        int h = 0;
+        while(cur!=null){
+            h++;
+            cur = cur.left;
+        }
+        return h;
+    }
+    private int heightRight(TreeNode root){
+        TreeNode cur = root;
+        int h = 0;
+        while(cur!=null){
+            h++;
+            cur = cur.right;
+        }
+        return h;
     }
 }
