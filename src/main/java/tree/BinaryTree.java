@@ -584,4 +584,56 @@ public class BinaryTree {
         }
         return h;
     }
+    
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+    	/*
+    	 * Construct Binary Tree from Preorder and Inorder Traversal.
+    	 * 
+    	 * intuition :
+    	 * 
+    	 * 			   0, 1, 2, 3, 4, 5, 6
+    	 * 			   __left___ __right__
+    	 * inOrder : [          X         ]
+    	 * 
+    	 * 			   0, 1, 2, 3, 4, 5, 6
+    	 * PreOrder : [X                  ]
+    	 * 				 __left___ __right__
+    	 * 
+    	 * first element X of preOrder is always the root, find X in inOrder. all the elements to the left
+    	 * of X belong to right sub tree of current root and all left of X belong to left sub tree.
+    	 * 
+    	 * Everything to left of X in inOrder can become new inOrder array for left sub tree, and to right of X in 
+    	 * inOrder can become new inOrder for right sub tree.
+    	 * 
+    	 * number of elements to the left of X in inOrder is the number of elements in preOrder after X will 
+    	 * belong to left subtree. hence from index of (X +1 to leftCount from inOrder) will become new preOrder
+    	 * for left subtree, and everything after that will be new preOrder for right subtree.
+    	 * 
+    	 * since it is required to find X in inOrder, its better to hash all values of inOrder for constant time
+    	 * retrieval.
+    	 * 
+    	 * */
+        Map<Integer, Integer> inRegister = new HashMap<>();
+        
+        for(int i=0; i<inorder.length; i++){
+            inRegister.put(inorder[i], i);
+        }
+        
+        return buildTree(preorder, inorder, 0, preorder.length-1, 0, inorder.length-1, inRegister);
+    }
+
+    TreeNode buildTree(int[] preorder, int[] inorder, int preStart, int preEnd, int inStart, int inEnd, Map<Integer, Integer> inRegister){
+        if(inStart > inEnd || preStart > preEnd)
+            return null;
+        
+        TreeNode node = new TreeNode(preorder[preStart]);
+        //index of root in inOrder array, fetched using map.
+        int inRoot = inRegister.get(preorder[preStart]);
+        //total number of items to the left of root.
+        int count = inRoot - inStart;
+
+        node.left = buildTree(preorder, inorder, preStart+1, preStart+count, inStart, inRoot-1, inRegister);
+        node.right = buildTree(preorder, inorder, preStart+count+1, preEnd, inRoot+1, inEnd, inRegister);
+        return node;
+    }
 }
