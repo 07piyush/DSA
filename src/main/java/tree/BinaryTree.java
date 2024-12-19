@@ -636,4 +636,25 @@ public class BinaryTree {
         node.right = buildTree(preorder, inorder, preStart+count+1, preEnd, inRoot+1, inEnd, inRegister);
         return node;
     }
+    
+    public TreeNode buildTreeFromPostOrder(int[] inorder, int[] postorder) 
+    {    	
+        Map<Integer, Integer> inRegister = new HashMap<>();
+        for(int i=0; i<inorder.length; i++){
+            inRegister.put(inorder[i], i);
+        }
+        
+        return buildTreeFromPostOrder(postorder, inorder, 0, postorder.length-1, 0, inorder.length-1, inRegister);
+    }
+    TreeNode buildTreeFromPostOrder(int[] postorder, int[] inorder, int poStart, int poEnd, int inStart, int inEnd, Map<Integer, Integer> inRegister){
+        if(poStart > poEnd || inStart > inEnd) return null;
+
+        TreeNode node = new TreeNode(postorder[poEnd]);
+        int inRoot = inRegister.get(postorder[poEnd]);
+        int count = inRoot - inStart;
+
+        node.left = buildTreeFromPostOrder(postorder, inorder, poStart, poStart+count-1, inStart, inRoot-1, inRegister);
+        node.right = buildTreeFromPostOrder(postorder, inorder, poStart+count, poEnd-1, inRoot+1, inEnd, inRegister);
+        return node;
+    }
 }
