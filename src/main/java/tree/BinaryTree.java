@@ -657,4 +657,55 @@ public class BinaryTree {
         node.right = buildTreeFromPostOrder(postorder, inorder, poStart+count, poEnd-1, inRoot+1, inEnd, inRegister);
         return node;
     }
+    
+    List<Integer> inOrderTraverse(TreeNode root){
+    	/*
+    	 * Morris Traversal : in conventional iterative or recursive approach to traverse tree as in order, 
+    	 * there is O(n) additional space required.
+    	 * 
+    	 * Idea is to temporarily link last node (right most of left sub tree) of a tree to the root.
+    	 * In this way, every time, there is no left to go then after processing root, we move to right (probably last)
+    	 * and this right will lead us to root. 
+    	 * 
+    	 * for each node, if left is null : do nothing (no temporary linking required) process root, 
+    	 * move right if exists. the right again becomes root.
+    	 * 
+    	 * if left is not null : then stay on current node (root) and find rightmost node of left subtree and link 
+    	 * its left/right to current node. There will be two scenarios in this : 
+    	 * 		1. during above activity, a loop is detected (we get back to root) that means we had already processed left
+    	 * subtree and linking already exist. so delete that link and move to right.
+    	 * 		2. no loop is detected, so link last node to current node.
+    	 * 
+    	 * 
+    	 * */
+    	
+    	List<Integer> result = new ArrayList<>();
+    	TreeNode curr = root;
+
+        while(curr != null){
+            if(curr.left == null){
+            	result.add(curr.val);
+                curr = curr.right;
+            }
+            else{
+                //1. find last node.
+                TreeNode last = curr.left;
+                while(last.right != null && last.right != curr)
+                    last = last.right;
+
+                if(last.right == curr){
+                	//Since looking for last node has lead us to current node, that means we have already processed
+                	//left sub tree. so we are back to root of LRoR, hence add root to result and move right.
+                    last.right = null;
+                    result.add(curr.val);
+                    curr = curr.right;
+                }
+                else{
+                    last.right = curr;
+                    curr = curr.left;
+                }
+            }
+        }
+    	return result;
+    }
 }
