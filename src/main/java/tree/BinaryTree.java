@@ -708,4 +708,41 @@ public class BinaryTree {
         }
     	return result;
     }
+    
+    public TreeNode deleteNode(TreeNode root, int key) {
+    	/*
+    	 * Case 1: root is null
+    	 * Case 2: target node is leaf node. simply make target node as null.
+    	 * Case 3: left of target node is null. return right of target node.
+    	 * Case 4: right of target is null. return left of target node.
+    	 * Case 5: neither left nor right of target node is null. 
+    	 * 			solution1: pick smallest from right sub tree to put at target nodes val and delete smallest node.
+    	 * 			solution2: pick largetst from left sub tree to put at target nodes' val and delete largest node.
+    	 * 
+    	 * */
+        if(root == null) return root;
+
+        if(key < root.val) root.left = deleteNode(root.left, key);
+        if(key > root.val) root.right = deleteNode(root.right, key);
+        if(key == root.val){
+            if(root.left == null && root.right == null){
+                root = null;
+            }
+            else if(root.left == null)  root = root.right;
+            else if(root.right == null) root = root.left;
+            else if(root.left != null && root.right != null){
+                //1.find smallest in right subtree.
+                TreeNode smallest = smallest(root.right);
+                root.val = smallest.val;
+                root.right = deleteNode(root.right, smallest.val);
+            }
+        }
+        return root;
+    }
+
+    private TreeNode smallest(TreeNode root){
+        TreeNode node = root;
+        while(node.left != null) node = node.left;
+        return node;
+    }
 }
