@@ -786,4 +786,27 @@ public class BinaryTree {
 
         return isValidBSTHelp(root.left, from, root.val) && isValidBSTHelp(root.right, root.val, to);
     }
+    
+    public TreeNode lowestCommonAncestorOfBST(TreeNode root, TreeNode p, TreeNode q) {
+    	/*
+    	 * approach 1 : when we ignore property of BST. time = O(n)
+    	 * 
+    	 * approach 2 : when we only go left/right when both p and q are on left/right.
+    	 * 
+    	 * approach 3 : we know tree is divided in range. when from root we first know that pathway splits to find p
+    	 * and q, then it is sure that that root is common parent. if we found any one before a split then we know that
+    	 * that root is first common parent to both because we have already eliminated rest of tree due to bst.
+    	 * 
+    	 * */
+        if(root == p || root == q || root == null)
+             return root;
+         boolean pOnLeft = root.val > p.val;
+         boolean qOnRight = root.val < q.val;
+         if((pOnLeft && qOnRight) || (!pOnLeft && !qOnRight))
+             return root;
+         
+         if(pOnLeft) return lowestCommonAncestor(root.left, p, q);
+
+         return lowestCommonAncestor(root.right, p, q);
+     }
 }
