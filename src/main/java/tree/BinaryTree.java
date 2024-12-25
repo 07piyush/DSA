@@ -663,7 +663,7 @@ public class BinaryTree {
     	 * Morris Traversal : in conventional iterative or recursive approach to traverse tree as in order, 
     	 * there is O(n) additional space required.
     	 * 
-    	 * Idea is to temporarily link last node (right most of left sub tree) of a tree to the root.
+    	 * Idea is to temporarily link last node (right most of left sub tree as per DFS) of a tree to the root.
     	 * In this way, every time, there is no left to go then after processing root, we move to right (probably last)
     	 * and this right will lead us to root. 
     	 * 
@@ -744,5 +744,46 @@ public class BinaryTree {
         TreeNode node = root;
         while(node.left != null) node = node.left;
         return node;
+    }
+    
+    private int current = 0;
+    private TreeNode res = null;
+    
+    public int kthSmallest(TreeNode root, int k) {
+    	/*
+    	 * inorder traversal of bst is sorted array.
+    	 * by using global holder of a result node and counter to current node,
+    	 * return result node value when k nodes are visited.
+    	 * 
+    	 * */
+        if(root == null)
+            return -1;
+        if(res == null)
+            res = root;
+        kthSmallest(root.left, k);
+        current++;
+        if(current == k)
+            res = root;
+        kthSmallest(root.right, k);
+        return res.val;
+    }
+    
+    public boolean isValidBST(TreeNode root) {
+    	/*
+    	 * mistakes : 1. if used range int max and int min, then every tree of having only one node
+    	 * of 2147483647 or -2147483647 will always say tree is invalid.
+    	 * 
+    	 * */
+        if(root == null)
+            return true;
+
+        return isValidBSTHelp(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+    private boolean isValidBSTHelp(TreeNode root, long from, long to){
+        if(root == null)
+            return true;
+        if(root.val <= from || root.val >= to) return false;
+
+        return isValidBSTHelp(root.left, from, root.val) && isValidBSTHelp(root.right, root.val, to);
     }
 }
