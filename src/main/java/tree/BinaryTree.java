@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeMap;
 
 public class BinaryTree {
@@ -809,4 +810,111 @@ public class BinaryTree {
 
          return lowestCommonAncestor(root.right, p, q);
      }
+    
+    public TreeNode bstFromPreorder(int[] preorder) {
+    	/*
+    	 * Give Pre-order traversal of BST, construct tree.
+    	 * 
+    	 * 1. brute force : for each item in preorder, we can decide from root, if item will go to left or right.
+    	 * for skewed bst, Time = O(n *n) because for each item we are traversing tree from the root.
+    	 * 
+    	 * 2. better : since in-order traversal of a BST is always sorted array. so we can create an aux array out of
+    	 * given pre-order and sort it. now it becomes problem to build a unique BST from preorder and inorder.
+    	 * Time = O( nlogn + n) : sort + buildTree | Space = O(n) : aux in order
+    	 * 
+    	 * 3. Optimal : by leveraging property of pre-order of a BST 
+    	 * 
+    	 * 
+    	 * */
+        return getBST(preorder, new int[]{0}, Integer.MAX_VALUE);
+    }
+
+    private TreeNode getBST(int[] preorder, int[] index, int ub){
+        if(index[0] > preorder.length-1 || preorder[index[0]] > ub) return null;
+
+        TreeNode node = new TreeNode(preorder[index[0]++]);
+        node.left = getBST(preorder, index, node.val);
+        node.right = getBST(preorder, index, ub);
+        return node;
+    }
+    
+    public boolean findTarget(TreeNode root, int k) {
+    	/*
+    	 * Given the root of a binary search tree and an integer k, return true if there exist two elements in the BST 
+    	 * such that their sum is equal to k, or false otherwise.
+    	 * 
+    	 * Brute Force : visit each node of tree, if node value (v) is < k then check if there exist v-k node in tree.
+    	 * Time : O(nLogN). Space = O(1)
+    	 * 
+    	 * Better : since in-order traversal of BST is sorted array, hence using a two pointer approach we can find
+    	 * result from in-order array.
+    	 * Time = O(n):traversal + O(n):two pointer algorithm
+    	 * Space = O(n):in-order
+    	 * 
+    	 * Optimal : since we are using auxiliary space above to get in-order array just to keep track of lowest and
+    	 * highest while increasing and decreasing pointers to meet k, we can instead use the property of BST
+    	 * and somehow point lowest and highest node in tree itself. that means apply two pointer approach on the tree
+    	 * itself.
+    	 * 
+    	 * if we follow in-order : Left-Root-Right : this give smallest node first.
+    	 * and if modified it to : Right-Root-Left : this give largest node first.
+    	 * 
+    	 * Prerequisites : BST iterator.
+    	 * so using two stacks we can implement two BST iterators that give next largest/smallest nodes in tree.
+    	 * if sum of next largest and next smallest is less than k, then move left.
+    	 * if sum of next largest and next smallest is greater than k, then move right.
+    	 * else we have found the two pointers whose sum is k.
+    	 * 
+    	 * */
+    	
+        Stack<TreeNode> lstk = new Stack<>();
+        Stack<TreeNode> rstk = new Stack<>();
+        TreeNode lptr = root;
+        TreeNode rptr = root;
+        boolean res = false;
+
+        while(lptr!=null){
+            lstk.push(lptr);
+            lptr = lptr.left;
+        }
+        while(rptr!=null){
+            rstk.push(rptr);
+            rptr = rptr.right;
+        }
+        while(lstk.peek().val < rstk.peek().val){
+            TreeNode left = lstk.peek();
+            TreeNode right = rstk.peek();
+            
+            if(left.val + right.val < k) moveLeft(lstk);
+
+            else if(left.val + right.val > k) moveRight(rstk);
+
+            else return true;
+        }
+        return res;
+    }
+
+    private void moveLeft(Stack<TreeNode> stk){
+        TreeNode node = stk.pop();
+        if(node.right != null){
+            node = node.right;
+            stk.push(node);
+            while(node.left != null){
+                node = node.left;
+                stk.push(node);
+            } 
+        }
+    }
+
+    private void moveRight(Stack<TreeNode> stk){
+        TreeNode node = stk.pop();
+        if(node.left != null){
+            node = node.left;
+            stk.push(node);
+            while(node.right != null){
+                node = node.right;
+                stk.push(node);
+            }
+        }
+    }
 }
