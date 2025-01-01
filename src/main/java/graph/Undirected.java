@@ -95,4 +95,28 @@ public class Undirected {
 				dfs(adj, dfs, visited, n);
 		}
 	}
+	
+	public int findCircleNum(int[][] isConnected) {
+		/*
+		 * Return the number of provinces.
+		 * A province is a group of directly or indirectly connected cities and no other cities outside of the group.
+		 * 
+		 * */
+        Set<Integer> visited = new HashSet<>();
+        int provinces = 0;
+        for(int i=0; i<isConnected.length; i++){
+            if(!visited.contains(i)){
+                provinces++;
+                dfs(isConnected, visited, i);
+            }
+        }
+        return provinces;
+    }
+    private void dfs(int[][] isConnected, Set<Integer> visited, int node){
+        visited.add(node);
+        for(int n=0; n<isConnected.length; n++){
+            if(isConnected[node][n]==1 && !visited.contains(n))
+                dfs(isConnected, visited, n);
+        }
+    }
 }
