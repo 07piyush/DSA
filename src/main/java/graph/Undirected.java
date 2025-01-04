@@ -119,4 +119,55 @@ public class Undirected {
                 dfs(isConnected, visited, n);
         }
     }
+    
+    class Triplet{
+        public Integer i;
+        public Integer j;
+        public Integer level;
+        public Triplet(Integer i, Integer j, Integer level){
+            this.i = i;
+            this.j = j;
+            this.level = level;
+        }
+    }
+
+    public int orangesRotting(int[][] grid) {
+        Queue<Triplet> queue = new LinkedList<>();
+        int[][] visited = new int[grid.length][];
+        int maxTime = 0;
+        int countFresh = 0;
+        //1. put all (i,j) = 2 nodes in queue.
+        for(int i=0; i<grid.length; i++){
+            visited[i] = new int[grid[i].length];
+            for(int j=0; j<grid[i].length; j++){
+                if(grid[i][j] == 2){
+                    Triplet node = new Triplet(i,j,0);
+                    visited[i][j] = 2;
+                    queue.add(node);
+                } 
+                else if(grid[i][j] == 1) countFresh++;
+            }
+        }
+        //2. perform bfs on queue.
+        int[] delRow = {-1, 0, 1, 0};
+        int[] delCol = {0, 1, 0, -1};
+        int count = 0;
+        while(!queue.isEmpty()){
+            Triplet node = queue.poll();
+            maxTime = maxTime>node.level?maxTime:node.level;
+            for(int neighbour=0; neighbour<4; neighbour++){
+                int row = node.i + delRow[neighbour];
+                int col = node.j + delCol[neighbour];
+                if(row > -1 && row < grid.length && col < grid[row].length && col > -1 && 
+                visited[row][col] != 2 && grid[row][col] == 1){
+                    queue.add(new Triplet(row, col, node.level+1));
+                    visited[row][col] = 2;
+                    count++;
+                }
+            }
+            
+        }
+
+        return count<countFresh?-1:maxTime;
+    }
 }
