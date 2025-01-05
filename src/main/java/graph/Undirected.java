@@ -170,4 +170,54 @@ public class Undirected {
 
         return count<countFresh?-1:maxTime;
     }
+    
+    class Pair{
+        int row;
+        int col;
+        
+        public Pair(int r, int c){
+            row=r;
+            col=c;
+        }
+        
+    }
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+    	/*
+    	 * flood fill all pixels that are of color in sr,sc or become of consecutively.
+    	 * 
+    	 * approach 1 : BFS : Time : O(m*n) as we are visiting each element in worst case.
+    	 * 					  Space : O(m*n) in worst case at a time there will be approx all pixels in queue.
+    	 * 								also visited grid will require O(m*n) space. 
+    	 * 
+    	 * */
+    	
+        int[][] result = new int[image.length][image[0].length];
+        boolean[][] visited = new boolean[image.length][image[0].length];
+        for(int i=0; i<image.length; i++){
+            for(int j=0; j<image[i].length; j++){
+                result[i][j] = image[i][j];
+            }
+        }
+        Queue<Pair> queue = new LinkedList<>();
+
+        queue.add(new Pair(sr,sc));
+        visited[sr][sc] = true;
+
+        int[] deltaRow = {-1, 0, 1, 0};
+        int[] deltaCol = {0, 1, 0, -1};
+        while(!queue.isEmpty()){
+            Pair node = queue.poll();
+            result[node.row][node.col] = color;
+            for(int neighbour=0; neighbour<4; neighbour++){
+                int cRow = node.row + deltaRow[neighbour];
+                int cCol = node.col + deltaCol[neighbour];
+                if(cRow>-1 && cRow< image.length && cCol >-1 && cCol<image[cRow].length && !visited[cRow][cCol] && image[cRow][cCol] == image[node.row][node.col]){
+                    queue.add(new Pair(cRow, cCol));
+                    visited[cRow][cCol] = true;
+                }
+            }
+        }
+
+        return result;
+    }
 }
