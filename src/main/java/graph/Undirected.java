@@ -185,10 +185,12 @@ public class Undirected {
     	/*
     	 * flood fill all pixels that are of color in sr,sc or become of consecutively.
     	 * 
-    	 * approach 1 : BFS : Time : O(m*n) as we are visiting each element in worst case.
+    	 * approach 1 : BFS : Time : O(m*n) as we are visiting each element in worst case (all pixel are of same color)
     	 * 					  Space : O(m*n) in worst case at a time there will be approx all pixels in queue.
     	 * 								also visited grid will require O(m*n) space. 
     	 * 
+    	 * approach 2 : DFS : Time : O(m*n) visiting all elements.
+    	 * 					  Space : O(m*n) all nodes are in stack. + visited array.
     	 * */
     	
         int[][] result = new int[image.length][image[0].length];
@@ -219,5 +221,56 @@ public class Undirected {
         }
 
         return result;
+    }
+    
+    class Pair2{
+        int node;
+        int from;
+        
+        Pair2(int curr, int parent){
+            node=curr;
+            from=parent;
+        }
+    }
+    
+    public boolean isCycle(ArrayList<ArrayList<Integer>> adj) {
+        /*
+         * Detect cycle in undirected graph.
+         * 
+         * 
+         * */
+        int count = adj.size();
+        boolean hasloop = false;
+        boolean[] visited = new boolean[count];
+        for(int i =0; i<count; i++){
+            //for each unvisited node, do dfs.
+            if(!visited[i]) hasloop = bfs(adj, visited, i);
+            
+            if(hasloop) return true;
+            
+        }
+        return hasloop;
+    }
+    
+    private boolean bfs(ArrayList<ArrayList<Integer>> adj, boolean[] visited, int startNode){
+        visited[startNode] = true;
+        Queue<Pair2> queue = new LinkedList<>();
+        for(int neighbor : adj.get(startNode)){
+            queue.add(new Pair2(neighbor, startNode));
+        }
+        while(!queue.isEmpty()){
+        	Pair2 item = queue.poll();
+            
+            for(int neighbor : adj.get(item.node)){
+                if(neighbor != item.from && visited[neighbor]){
+                    return true;
+                }
+                if(neighbor != item.from){
+                    visited[neighbor] = true;
+                    queue.add(new Pair2(neighbor, item.node));    
+                }
+            }
+        }
+        return false;
     }
 }
