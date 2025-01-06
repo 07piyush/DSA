@@ -237,6 +237,8 @@ public class Undirected {
         /*
          * Detect cycle in undirected graph.
          * 
+         * when traversing graph, if a node is already visited but is not parent node then that means it has already
+         * been visited before. 
          * 
          * */
         int count = adj.size();
@@ -255,19 +257,18 @@ public class Undirected {
     private boolean bfs(ArrayList<ArrayList<Integer>> adj, boolean[] visited, int startNode){
         visited[startNode] = true;
         Queue<Pair2> queue = new LinkedList<>();
-        for(int neighbor : adj.get(startNode)){
-            queue.add(new Pair2(neighbor, startNode));
-        }
+        queue.add(new Pair2(startNode, -1));
+        
         while(!queue.isEmpty()){
-        	Pair2 item = queue.poll();
+            Pair2 item = queue.poll();
             
             for(int neighbor : adj.get(item.node)){
-                if(neighbor != item.from && visited[neighbor]){
-                    return true;
-                }
-                if(neighbor != item.from){
+                if(!visited[neighbor]){
                     visited[neighbor] = true;
                     queue.add(new Pair2(neighbor, item.node));    
+                }
+                else if(neighbor != item.from){
+                    return true;
                 }
             }
         }
