@@ -274,4 +274,49 @@ public class Undirected {
         }
         return false;
     }
+    
+    class Triplet2{
+        int r;
+        int c;
+        int dist;
+
+        public Triplet2(int row, int col, int distance){
+            r=row;
+            c=col;
+            dist=distance;
+        }
+    }
+    public int[][] updateMatrix(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int[][] result = new int[m][n];
+        Queue<Triplet2> queue = new LinkedList<>();
+        boolean[][] visited = new boolean[m][n];
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(mat[i][j] == 0){
+                    queue.add(new Triplet2(i,j,0));
+                    visited[i][j] = true;
+                }
+            }
+        }
+        int[] deltaR = new int[]{-1, 0, 1, 0};
+        int[] deltaC = new int[]{0, 1, 0, -1};
+        while(!queue.isEmpty()){
+        	Triplet2 curr = queue.poll();
+            int row = curr.r;
+            int col = curr.c;
+            int dist = curr.dist;
+            result[row][col] = dist;
+            for(int neighbor=0; neighbor<4; neighbor++){
+                int nR = row + deltaR[neighbor];
+                int nC = col + deltaC[neighbor];
+                if(nR<m && nR>-1 && nC<n && nC>-1 && !visited[nR][nC]){
+                    queue.add(new Triplet2(nR,nC,dist+1));
+                    visited[nR][nC] = true;
+                }
+            }
+        }
+        return result;
+    }
 }
