@@ -319,4 +319,51 @@ public class Undirected {
         }
         return result;
     }
+    
+    public void solve(char[][] board) {
+    	
+    	/*
+    	 * 130. Surrounded Regions - leetcode
+    	 * 
+    	 * */
+    	
+        int m = board.length;
+        int n = board[0].length;
+        boolean[][] unconvertible = new boolean[m][n];
+        Queue<Pair> queue = new LinkedList<>();
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(board[i][j] == 'O' && !unconvertible[i][j]){
+                   if(i==0 || i == m-1 || j==0 || j==n-1){
+                    //node is on the edge
+                    findAndMark(i,j,board,unconvertible);
+                   }
+                }
+            }
+        }
+
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(board[i][j] == 'O' && !unconvertible[i][j])
+                    board[i][j] = 'X';
+            }
+        }
+    }
+
+    private void findAndMark(int r, int c, char[][] board, boolean[][] unconvertible){
+        if(!unconvertible[r][c] && board[r][c]=='O'){
+            unconvertible[r][c] = true;
+        }
+        int m = board.length;
+        int n = board[0].length;
+        int[] delR = new int[]{-1,0,1,0};
+        int[] delC = new int[]{0,1,0,-1};
+
+        for(int i=0; i<4; i++){
+            int nR = r+delR[i];
+            int nC = c+delC[i];
+            if(nR<m && nR>-1 && nC<n && nC>-1 && !unconvertible[nR][nC])
+                findAndMark(nR, nC, board, unconvertible);
+        }
+    }
 }
