@@ -321,22 +321,29 @@ public class Undirected {
     }
     
     public void solve(char[][] board) {
-    	
     	/*
-    	 * 130. Surrounded Regions - leetcode
+    	 * 130. Surrounded Regions | leetcode.
     	 * 
+    	 * Given a matrix of (m x n), marked with 'O' and 'X'. find all 'O' that and mark them 'X'
+    	 * if it is not directly or indirectly connected to boundary. 
+    	 * a 'O' is connected to boundary directly if it lies on the boundary of matrix.
+    	 * a 'O' is connected to boundary indirectly if path of neighbouring 'O's leads to boundary. 
+    	 * 
+    	 * imagine like we need to kill/convert those elements that are sorrounded by X and have no way to escape directly
+    	 * or with help.
+    	 *  
     	 * */
     	
         int m = board.length;
         int n = board[0].length;
-        boolean[][] unconvertible = new boolean[m][n];
-        Queue<Pair> queue = new LinkedList<>();
+        boolean[][] visited = new boolean[m][n];
         for(int i=0; i<m; i++){
             for(int j=0; j<n; j++){
-                if(board[i][j] == 'O' && !unconvertible[i][j]){
-                   if(i==0 || i == m-1 || j==0 || j==n-1){
+                if(i==0 || i == m-1 || j==0 || j==n-1){
+                    if(board[i][j] == 'O'){
                     //node is on the edge
-                    findAndMark(i,j,board,unconvertible);
+                    visited[i][j] = true;
+                    findAndMark(i,j,board,visited);
                    }
                 }
             }
@@ -344,26 +351,27 @@ public class Undirected {
 
         for(int i=0; i<m; i++){
             for(int j=0; j<n; j++){
-                if(board[i][j] == 'O' && !unconvertible[i][j])
+                if(board[i][j] == 'O' && !visited[i][j])
                     board[i][j] = 'X';
             }
         }
     }
 
-    private void findAndMark(int r, int c, char[][] board, boolean[][] unconvertible){
-        if(!unconvertible[r][c] && board[r][c]=='O'){
-            unconvertible[r][c] = true;
-        }
+    private void findAndMark(int r, int c, char[][] board, boolean[][] visted){
         int m = board.length;
         int n = board[0].length;
         int[] delR = new int[]{-1,0,1,0};
         int[] delC = new int[]{0,1,0,-1};
 
         for(int i=0; i<4; i++){
-            int nR = r+delR[i];
-            int nC = c+delC[i];
-            if(nR<m && nR>-1 && nC<n && nC>-1 && !unconvertible[nR][nC])
-                findAndMark(nR, nC, board, unconvertible);
+            int nR = r + delR[i];
+            int nC = c + delC[i];
+            if(nR<m && nR>-1 && nC<n && nC>-1){
+                if(board[nR][nC] == 'O' && !visted[nR][nC]){
+                    visted[nR][nC] = true;
+                    findAndMark(nR, nC, board, visted);                    
+                }
+            }
         }
     }
 }
